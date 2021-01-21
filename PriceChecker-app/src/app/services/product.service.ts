@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { ProductResponseModel } from '../models/product.respose.model';
-import { ProductPictureResponseModel } from '../models/product.picture.response.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,16 +12,23 @@ export class ProductService {
 
 constructor(private http: HttpClient, private router: Router) { }
 
-  public async getProduct() {
-    const url: string = `http://mpce04.avrora.lan/art?key=39fa302c1a6b40e19020b376c9becb3b&stock=235&device=DeviceName&barcode=2310000390178`;      
+  public async getProduct( barcode ) {
+    const url: string = environment.protocol + environment.host + environment.port +
+    environment.art + environment.key + environment.barcode + barcode;      
     const product = await this.http.get<ProductResponseModel>(url).toPromise();
 
     return product;
   }
-  public async getPicture(): Promise<ProductPictureResponseModel> { 
-    const url : string = 'http://mpce04.avrora.lan/img?key=39fa302c1a6b40e19020b376c9becb3b&stock=235&device=DeviceName&code=39017';
-    const productPicture = await this.http.get<ProductPictureResponseModel>(url).toPromise();
-    
-    return productPicture;
+
+  public async getPicture( code ): Promise<HTMLImageElement> { 
+    const url : string = environment.protocol + environment.host + environment.port +
+    environment.img + environment.key + environment.code + code;  ;
+    const binar = await this.http.get(url,{responseType: 'blob'}).toPromise();
+    let productPicture = new Blob([binar], {type: "image/jpeg"});
+    var urlCreator = window.URL || window.webkitURL;
+    var imageUrl = urlCreator.createObjectURL(productPicture);
+    var img = document.querySelector("#image").src = imageUrl;
+
+    return img;
   }
 }

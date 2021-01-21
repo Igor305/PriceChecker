@@ -5,6 +5,8 @@ import { ProductModule } from './product/product.module';
 import { AppRoutingModule } from './app-routing.module';
 import { ProductService } from './services/product.service';
 import { HttpClientModule } from '@angular/common/http';
+import { BarcodeScannerLivestreamModule } from "ngx-barcode-scanner";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [AppComponent],
@@ -12,7 +14,9 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    ProductModule
+    ProductModule,
+    BarcodeScannerLivestreamModule,
+    BrowserAnimationsModule,
   ],
   providers: [ProductService],
   bootstrap: [AppComponent]

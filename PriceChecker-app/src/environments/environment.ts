@@ -3,7 +3,15 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  protocol: 'http://',
+  host: 'mpce04.avrora.',
+  port: 'lan',
+  art: '/art',
+  img: '/img',
+  key: '?key=39fa302c1a6b40e19020b376c9becb3b',
+  code: '&code=',
+  barcode: '&barcode='
 };
 
 /*

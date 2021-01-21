@@ -1,9 +1,22 @@
-<p>
-  {{productPictureResponseModel}} <br>
+<mat-grid-list cols="2" rowHeight="1:1">
+   <mat-grid-tile>
+      <img class='image' id="image"/><br>
+   </mat-grid-tile>
+   <mat-grid-tile>      
+      Id - {{productResponseModel.Id}} <br>
+      штрих-код товарe - {{productResponseModel.Barcode}} <br>
+      назва - {{productResponseModel.Name}} <br>
+      цена - {{productResponseModel.Price}} <br>
+   </mat-grid-tile>
+ </mat-grid-list>
+  <input autofocus [(ngModel)]="barcode"> <br>
+  <label >{{barcode}}</label> <br>
 
-  Id - {{productResponseModel.Id}} <br>
-  штрих-код товарe - {{productResponseModel.Barcode}} <br>
-  назва - {{productResponseModel.Name}} <br>
-  цена - {{productResponseModel.Price}} <br>
+  <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
 
-</p>
+  <button *ngIf= "this.progressbarValue > 0" mat-raised-button >Timer ({{30 - curSec}})</button>
+
+
+
+
+
