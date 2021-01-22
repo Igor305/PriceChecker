@@ -11,30 +11,49 @@ import { interval } from 'rxjs';
 })
 export class ProductComponent implements OnInit, AfterViewChecked{
 
+  mode: boolean = false;
+  errorMessage: boolean = false;
+
   barcode: string ="";
+
 
   progressbarValue = 0;
   curSec: number = 0;
 
-  productPictureResponseModel : HTMLImageElement
+  productPictureProduct : HTMLImageElement
+  productAmountProduct : number
   productResponseModel : ProductResponseModel = {}
 
-  constructor(private productService : ProductService ) { }
+
+  constructor(private productService : ProductService ) {}
 
   public async ngOnInit() {
   }
 
   public async ngAfterViewChecked(){
-     if (this.barcode.length == 13){
-      this.productResponseModel = await this.productService.getProduct(this.barcode);
-      this.productPictureResponseModel = await this.productService.getPicture(this.productResponseModel.Id);
-      this.Timer(30);
-      this.barcode ='';
-     }
+    if (this.barcode.length == 13){
+ 
+      try{
+        this.mode = true;
+        console.log(this.mode);
+        this.productResponseModel = await this.productService.getProduct(this.barcode);
+        this.barcode ='';
+        this.productPictureProduct = await this.productService.getPicture(this.productResponseModel.Id);
+        this.productAmountProduct = await this.productService.getAmount(this.productResponseModel.Id);
+        this.Timer(8);
+
+      }
+      catch{
+        this.barcode ='';
+        this.errorMessage = true; 
+        this.Timer(8);
+      }
+      console.log(this.mode);
+    }
+
   }
 
-
-  Timer(seconds: number, ) {
+  Timer(seconds: number) {
     var time = seconds;
     const timer$ = interval(1000);
     const sub = timer$.subscribe((sec) => {
@@ -44,7 +63,10 @@ export class ProductComponent implements OnInit, AfterViewChecked{
       if (this.curSec === seconds) {
         sub.unsubscribe();
       }
-    });
+      if (this.progressbarValue == 0){
+        this.mode = false;
+      }
+    }); 
   }
 
 }

@@ -9,6 +9,7 @@ export const environment = {
   port: 'lan',
   art: '/art',
   img: '/img',
+  totals: '/totals',
   key: '?key=39fa302c1a6b40e19020b376c9becb3b',
   code: '&code=',
   barcode: '&barcode='
