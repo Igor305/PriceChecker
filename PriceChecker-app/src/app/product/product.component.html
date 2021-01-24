@@ -1,10 +1,8 @@
-<input type ="hidden" autofocus [(ngModel)]="barcode"> <br>
-<label>{{barcode}}</label> <br>
+<input class = "visually-hidden" autofocus [(ngModel)]="barcode">
 <span *ngIf="mode == false;" >
    <span class="slider" id="main-slider"></span>
       <span class = "slider">
-         <img src="assets/img/Банер_ПЧ_мал_Реклама_поставщика_Кава_4_01_10_01.png" id="slide-1" class="slide" >
-         <img src="assets/img/Туалетний_блок_Бреф_50_гр.png" id="slide-2" class="slide" />
+         <img src="assets/img/Банер_ПЧ_мал_Реклама_поставщика_Кава_4_01_10_01.png" id="slide-1" class="slide" >       
       </span>
 </span>
 <span *ngIf="mode == true;" >
@@ -32,3 +30,4 @@
       <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
    </span>
 </span>
+<label>{{barcode}}</label> <br>

@@ -121,5 +121,8 @@
       }
     }
   },
-  "defaultProject": "PriceChecker-app"
+  "defaultProject": "PriceChecker-app",
+  "cli": {
+    "analytics": false
+  }
 }
