@@ -7,6 +7,9 @@ import { ProductService } from './services/product.service';
 import { HttpClientModule } from '@angular/common/http';
 import { BarcodeScannerLivestreamModule } from "ngx-barcode-scanner";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { EmployeeService } from './services/employee.service';
+import { AssetService } from './services/asset.service';
+import { CardService } from './services/card.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -18,7 +21,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BarcodeScannerLivestreamModule,
     BrowserAnimationsModule,
   ],
-  providers: [ProductService],
+  providers: [ProductService, EmployeeService, AssetService, CardService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

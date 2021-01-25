@@ -1,11 +1,11 @@
-<input class = "visually-hidden" autofocus [(ngModel)]="barcode">
-<span *ngIf="mode == false;" >
+<input class = "visually-hidden"  autofocus [(ngModel)]="barcode">
+<span *ngIf="mode == 0;" > 
    <span class="slider" id="main-slider"></span>
       <span class = "slider">
          <img src="assets/img/Банер_ПЧ_мал_Реклама_поставщика_Кава_4_01_10_01.png" id="slide-1" class="slide" >       
       </span>
 </span>
-<span *ngIf="mode == true;" >
+<span *ngIf="mode == 1;" >
    <span *ngIf="errorMessage == false;" >
       <mat-grid-list cols="2" rowHeight="1:1">
          <mat-grid-tile>
@@ -18,6 +18,46 @@
             цена - {{productResponseModel.Price}} <br>
             старая цена - {{productResponseModel.PriceOld}} <br>
             количество - {{productAmountProduct}} <br>
+         </mat-grid-tile>
+      </mat-grid-list>
+
+      <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
+   </span>
+   <span *ngIf="errorMessage == true;" >
+      Товар не знайдено <br>
+      Зверніться до продавця консультанта
+
+      <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
+   </span>
+</span>
+<span *ngIf="mode == 2;" >
+   <span *ngIf="errorMessage == false;" >
+      Id - {{employeeRegisterResponseModel.Id}} <br>
+      штрих-код - {{employeeRegisterResponseModel.Barcode}} <br>
+      Имя - {{employeeRegisterResponseModel.Name}} <br>
+      <span *ngIf="employeeRegisterResponseModel. State == 0;">Выполнила выход из системы</span>
+      <span *ngIf="employeeRegisterResponseModel. State == 1;">Выполнила вход в систему</span>
+      <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
+   </span>
+   <span *ngIf="errorMessage == true;" >
+      Вы кто? <br>
+      Уходите)ent321002
+      <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
+   </span>
+</span>
+<span *ngIf="mode == 3;" >
+   <span *ngIf="errorMessage == false;" >
+      <mat-grid-list cols="2" rowHeight="1:1">
+         <mat-grid-tile>
+            <img class='image' id="assetImage"/><br>
+         </mat-grid-tile>
+         <mat-grid-tile>      
+            Id - {{assetResponseModel.Code}} <br>
+            штрих-код товарe - {{assetResponseModel.Barcode}} <br>
+            Description - {{assetResponseModel.Description}} <br>
+            FactoryNum - {{assetResponseModel.FactoryNum}} <br>
+            InvNum - {{assetResponseModel.InvNum}} <br>
+            Type - {{assetResponseModel.Type}} <br>
          </mat-grid-tile>
       </mat-grid-list>
 

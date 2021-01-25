@@ -9,10 +9,19 @@ export const environment = {
   port: 'lan',
   art: '/art',
   img: '/img',
+  ico: '/ico',
   totals: '/totals',
+  emp_reg: '/emp_reg',
+  emp_info: '/emp_info',
+  asset: '/asset',
+  card: '/card',
+  rel: '/rel',
   key: '?key=39fa302c1a6b40e19020b376c9becb3b',
+  stock: '&stock=12',
+  device: '&device=DeviceName',
   code: '&code=',
   barcode: '&barcode='
+
 };
 
 /*
