@@ -15,11 +15,14 @@ import { CardResponseModel } from '../models/card/card.response.model';
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit, AfterViewChecked{
-
+ 
+  interval: NodeJS.Timeout
   mode: number = 0;
   errorMessage: boolean = false;
+  status: boolean = false;
 
   barcode: string ="";
+  barcodeLength : number = 0;
   barcodeAsset: string ="";
 
   progressbarValue = 0;
@@ -38,15 +41,61 @@ export class ProductComponent implements OnInit, AfterViewChecked{
   assetPictureResponseModel : HTMLImageElement
   cardResponseModel : CardResponseModel = {}
 
-
   constructor(private productService : ProductService,
     private employeeService : EmployeeService,
-    private assetService : AssetService ) {}
+    private assetService : AssetService ) {
+    }
 
   public async ngOnInit() {
   }
 
+  public async wait(){
+    if ((this.barcodeLength == this.barcode.length)&&(this.barcodeLength != 0)){
+        this.mode++;
+        clearInterval(this.interval); 
+        
+    }
+    this.barcodeLength = this.barcode.length;
+    console.log(this.barcodeLength);
+    console.log(this.barcode.length);
+    console.log(this.mode);
+  }
+
   public async ngAfterViewChecked(){
+
+    if (this.barcode == "772211002"){
+      this.barcode ="";
+      this.mode = 1111;
+      this.interval = setInterval(() => this.wait(), 1000);        
+      console.log(this.mode);
+      
+    }
+
+    if (this.mode == 1112){
+   
+      this.interval = setInterval(() => this.wait(), 1000);        
+      console.log(this.mode);
+    }
+
+    if (this.mode == 1113){
+  
+      this.interval = setInterval(() => this.wait(), 1000);        
+      console.log(this.mode);
+
+    } 
+    if (this.mode == 1114){
+  
+      this.interval = setInterval(() => this.wait(), 1000);        
+      console.log(this.mode);
+
+    } 
+    if (this.mode == 1115){
+  
+      this.interval = setInterval(() => this.wait(), 1000);        
+      console.log(this.mode);
+
+    }   
+     
     if (this.barcode.startsWith('ent')){
       this.mode = 2;
       this.employeeRegisterResponseModel = await this.employeeService.registerEmployee(this.barcode);
@@ -63,23 +112,12 @@ export class ProductComponent implements OnInit, AfterViewChecked{
         this.productResponseModel = await this.productService.getProduct(this.barcode);
         this.barcodeAsset = this.barcode;
         this.barcode ='';
-        if(this.productResponseModel.Id == -1){
-          this.mode = 3;
-          this.assetResponseModel = await this.assetService.getAsset(this.barcodeAsset);
-          //this.assetPictureResponseModel = await this.assetService.getPicture(this.assetResponseModel.Code);
-          this.barcode ='';
-          this.Timer(8);
-        }
-
-        else{
-          this.barcode ='';
-        //  this.productIconProduct = await this.productService.getIcon(this.productResponseModel.Id);
-          this.productsResponseModel = await this.productService.getProducts(this.productResponseModel.Id);
-          console.log(this.productsResponseModel);
-          this.productPictureProduct = await this.productService.getPicture(this.productResponseModel.Id);
-          this.productAmountProduct = await this.productService.getAmount(this.productResponseModel.Id);
-          this.Timer(8);
-        }
+      //   this.productIconProduct = await this.productService.getIcon(this.productResponseModel.Id);
+       // this.productsResponseModel = await this.productService.getProducts(this.productResponseModel.Id);
+        this.productPictureProduct = await this.productService.getPicture(this.productResponseModel.Id);
+        this.productAmountProduct = await this.productService.getAmount(this.productResponseModel.Id);
+        this.Timer(8);
+        
       }
 
       catch{  
