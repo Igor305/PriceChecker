@@ -1,4 +1,4 @@
-<input autofocus [(ngModel)]="barcode"> 
+<input class = "visually-hidden" autofocus [(ngModel)]="barcode"> 
 <!--Режим ожидания -->
 <span *ngIf="mode == 0;" >
 
@@ -25,8 +25,10 @@
    Просканируйте номер корпусу (тільки цифри, без букви «Р»)
 </span>
 <span *ngIf="mode == 1115;" >
-   Вітаю у режимі конфігурації
-   Ваші данні мають вигляд
+   Номер магазину - {{this.stock}} <br>
+   Номер ПЧ - {{this.device}} <br>
+   Статичний IP {{this.ip}} <br>
+   Номер корпусу {{this.numberBody}} <br>
 </span>
 
 <!--Режим сканирования товара -->
@@ -68,10 +70,10 @@
 <!--Режим регистрации персонала -->
 <span *ngIf="mode == 2;" >
    <span *ngIf="errorMessage == false;" >
-      <span class = "name">{{employeeRegisterResponseModel.Name}} </span> <br>
-      <span *ngIf="employeeRegisterResponseModel. State == 0;"> Выполнила выход из системы
-      <span *ngIf="employeeRegisterResponseModel. State == 1;"> Выполнила вход в систему
-      <span class ="additional">
+      <span >{{employeeRegisterResponseModel.Name}} </span> <br>
+      <span *ngIf="employeeRegisterResponseModel.State == 0;"> Выполнила выход из системы
+      <span *ngIf="employeeRegisterResponseModel.State == 1;"> Выполнила вход в систему
+      <span >
          Ш/К: - {{employeeRegisterResponseModel.Barcode}} 
          Код - {{employeeRegisterResponseModel.Id}}
       </span>

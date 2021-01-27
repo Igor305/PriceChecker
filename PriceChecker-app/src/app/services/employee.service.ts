@@ -20,9 +20,10 @@ export class EmployeeService {
     return employee;
   }
 
-  public async registerEmployee ( barcode ) {
+  public async registerEmployee ( barcode, stock, device ) {
       const url: string = environment.protocol + environment.host + environment.port +
-      environment.emp_reg + environment.key + environment.stock + environment.barcode + barcode;
+      environment.emp_reg + environment.key + environment.stock + stock +
+      environment.device + device + environment.barcode + barcode;
       const employee = await this.http.get<EmployeeResponseModel>(url).toPromise();
 
       return employee;

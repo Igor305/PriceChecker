@@ -17,10 +17,16 @@ export const environment = {
   card: '/card',
   rel: '/rel',
   key: '?key=39fa302c1a6b40e19020b376c9becb3b',
-  stock: '&stock=12',
-  device: '&device=DeviceName',
+  stock: '&stock=',
+  device: '&device=',
   code: '&code=',
-  barcode: '&barcode='
+  barcode: '&barcode=',
+
+  viewConfig: '772211001',
+  inConfig: '772211002',
+  saveConfig: '772211003',
+  removeConfig: '772211004',
+  resetConfig: 'BarcodeReset'
 
 };
 

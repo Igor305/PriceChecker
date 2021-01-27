@@ -5,8 +5,8 @@ import { interval } from 'rxjs';
 import { EmployeeResponseModel } from '../models/employee/employee.response.model';
 import { EmployeeService } from '../services/employee.service';
 import { AssetResponseModel } from '../models/asset/asset.response.model';
-import { AssetService } from '../services/asset.service';
 import { CardResponseModel } from '../models/card/card.response.model';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -16,10 +16,15 @@ import { CardResponseModel } from '../models/card/card.response.model';
 })
 export class ProductComponent implements OnInit, AfterViewChecked{
  
+  stock : string = "";
+  device : string = "";
+  ip : string = "";
+  numberBody : string = "";
+
   interval: NodeJS.Timeout
   mode: number = 0;
+  checkConfig: number = 0;
   errorMessage: boolean = false;
-  status: boolean = false;
 
   barcode: string ="";
   barcodeLength : number = 0;
@@ -42,8 +47,7 @@ export class ProductComponent implements OnInit, AfterViewChecked{
   cardResponseModel : CardResponseModel = {}
 
   constructor(private productService : ProductService,
-    private employeeService : EmployeeService,
-    private assetService : AssetService ) {
+    private employeeService : EmployeeService ) {
     }
 
   public async ngOnInit() {
@@ -51,57 +55,66 @@ export class ProductComponent implements OnInit, AfterViewChecked{
 
   public async wait(){
     if ((this.barcodeLength == this.barcode.length)&&(this.barcodeLength != 0)){
-        this.mode++;
+        this.mode++;  
+        this.checkConfig++;
         clearInterval(this.interval); 
-        
+        let number = this.barcode;
+
+        if (this.barcode == environment.removeConfig)   {
+          this.checkConfig -= 2;
+        }
+        if (this.checkConfig == 1)   {
+          localStorage.setItem('stock', number);
+        }
+        if (this.checkConfig == 3)   {
+          localStorage.setItem('device', number);
+        }
+        if (this.checkConfig == 5)   {
+          localStorage.setItem('ip', number);
+        }
+        if (this.checkConfig == 7)   {
+          localStorage.setItem('numberBody', number);
+          this.checkConfig = 0;
+          this.barcode = environment.viewConfig;
+        }
+
+        this.barcode = "";    
     }
+
     this.barcodeLength = this.barcode.length;
-    console.log(this.barcodeLength);
-    console.log(this.barcode.length);
-    console.log(this.mode);
   }
 
   public async ngAfterViewChecked(){
 
-    if (this.barcode == "772211002"){
+    if (this.barcode == environment.inConfig){
       this.barcode ="";
       this.mode = 1111;
-      this.interval = setInterval(() => this.wait(), 1000);        
-      console.log(this.mode);
+      this.interval = setInterval(() => this.wait(), 1000);    
       
     }
 
-    if (this.mode == 1112){
-   
+    if (this.checkConfig == 1){
+      this.checkConfig = 2;
       this.interval = setInterval(() => this.wait(), 1000);        
-      console.log(this.mode);
     }
 
-    if (this.mode == 1113){
-  
+    if (this.checkConfig == 3){
+      this.checkConfig = 4;
       this.interval = setInterval(() => this.wait(), 1000);        
-      console.log(this.mode);
-
     } 
-    if (this.mode == 1114){
-  
-      this.interval = setInterval(() => this.wait(), 1000);        
-      console.log(this.mode);
 
-    } 
-    if (this.mode == 1115){
-  
+    if (this.checkConfig == 5){
+      this.checkConfig = 6;
       this.interval = setInterval(() => this.wait(), 1000);        
-      console.log(this.mode);
+    }
 
-    }   
-     
-    if (this.barcode.startsWith('ent')){
-      this.mode = 2;
-      this.employeeRegisterResponseModel = await this.employeeService.registerEmployee(this.barcode);
-      console.log(this.employeeRegisterResponseModel.State);
-    //  this.employeeInfoResponseModel = await this.employeeService.getEmployee(this.barcode);
-      this.barcode ='';
+    if ((this.barcode == environment.viewConfig)||(this.mode == 1115)){
+      this.barcode ="";
+      this.mode = 1115;
+      this.stock = localStorage.getItem('stock');
+      this.device = localStorage.getItem('device');
+      this.ip = localStorage.getItem('ip');
+      this.numberBody = localStorage.getItem('numberBody');
       this.Timer(8);
     }
 
@@ -109,13 +122,15 @@ export class ProductComponent implements OnInit, AfterViewChecked{
  
       try{
         this.mode = 1;
-        this.productResponseModel = await this.productService.getProduct(this.barcode);
+        let stock = localStorage.getItem('stock');
+        let device = localStorage.getItem('device');
+        this.productResponseModel = await this.productService.getProduct(this.barcode, stock, device);
         this.barcodeAsset = this.barcode;
         this.barcode ='';
       //   this.productIconProduct = await this.productService.getIcon(this.productResponseModel.Id);
        // this.productsResponseModel = await this.productService.getProducts(this.productResponseModel.Id);
-        this.productPictureProduct = await this.productService.getPicture(this.productResponseModel.Id);
-        this.productAmountProduct = await this.productService.getAmount(this.productResponseModel.Id);
+        this.productPictureProduct = await this.productService.getPicture(this.productResponseModel.Id, stock, device);
+        this.productAmountProduct = await this.productService.getAmount(this.productResponseModel.Id, stock, device);
         this.Timer(8);
         
       }
@@ -125,6 +140,17 @@ export class ProductComponent implements OnInit, AfterViewChecked{
         console.log(this.errorMessage = true);
         this.Timer(8);
       }
+    }
+
+    if (this.barcode.startsWith('ent')){
+      this.mode = 2;
+      let stock = localStorage.getItem('stock');
+      let device = localStorage.getItem('device');
+      this.employeeRegisterResponseModel = await this.employeeService.registerEmployee(this.barcode, stock, device );
+      console.log(this.employeeRegisterResponseModel.State);
+    //  this.employeeInfoResponseModel = await this.employeeService.getEmployee(this.barcode);
+      this.barcode ='';
+      this.Timer(8);
     }
 
   }
