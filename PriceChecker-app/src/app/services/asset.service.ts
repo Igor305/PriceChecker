@@ -19,4 +19,17 @@ export class AssetService {
 
     return asset;
   }
+
+  public async getPicture( code ): Promise<HTMLImageElement> { 
+    const url : string = environment.protocol + environment.host + environment.port +
+    environment.img + environment.key + environment.code + code;
+    const binar = await this.http.get(url,{responseType: 'blob'}).toPromise();
+    let productPicture = new Blob([binar], {type: "image/jpeg"});
+    var urlCreator = window.URL || window.webkitURL;
+    var imageUrl = urlCreator.createObjectURL(productPicture);
+    var img : HTMLImageElement  = document.querySelector("#assetImage");
+    img.src = imageUrl;
+
+    return img;
+  }
 }

@@ -19,7 +19,6 @@ constructor(private http: HttpClient, private router: Router) { }
     environment.device + device + environment.barcode + barcode;      
     const product = await this.http.get<ProductResponseModel>(url).toPromise();
 
-    console.log(url);
     return product;
   }
   
@@ -31,15 +30,13 @@ constructor(private http: HttpClient, private router: Router) { }
     const amountInStock = await list.find (x =>x.StockId == stock); 
     const amount = amountInStock.Qty;
 
-    console.log(stock);
-    console.log(list);
     return amount;
   }
 
   public async getPicture( code, stock, device ): Promise<HTMLImageElement> { 
     const url : string = environment.protocol + environment.host + environment.port +
     environment.img + environment.key + environment.stock + stock + 
-    environment.device + device + environment.code + code;
+    environment.device + device + environment.sticker + environment.code + code;
     const binar = await this.http.get(url,{responseType: 'blob'}).toPromise();
     let productPicture = new Blob([binar], {type: "image/jpeg"});
     var urlCreator = window.URL || window.webkitURL;
@@ -47,7 +44,6 @@ constructor(private http: HttpClient, private router: Router) { }
     var img : HTMLImageElement  = document.querySelector("#image");
     img.src = imageUrl;
 
-    console.log(url);
     return img;
   }
 

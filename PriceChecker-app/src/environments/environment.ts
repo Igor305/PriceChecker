@@ -19,6 +19,7 @@ export const environment = {
   key: '?key=39fa302c1a6b40e19020b376c9becb3b',
   stock: '&stock=',
   device: '&device=',
+  sticker: '&sticker=1',
   code: '&code=',
   barcode: '&barcode=',
 

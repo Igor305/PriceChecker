@@ -1,6 +1,17 @@
+mat-grid-list{
+  width: 1024px;
+  height: 600px;
+  background-image: url(../../assets/img/resources/systemInfo_dark.jpg);
+}
+.slide{
+  display: none;
+}
 .image{
-    float:right;
-
+  width: 500px;
+  height: 550px;
+  float: right;
+  margin: 20px 10px 0px 0px;
+  border-radius: 10px;
 }
 .visually-hidden {
   position: absolute;

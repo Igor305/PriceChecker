@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, OnInit } from '@angular/core';
+import { AfterViewChecked, Component } from '@angular/core';
 import { ProductService } from '../services/product.service';
 import { ProductResponseModel } from '../models/product/product.respose.model';
 import { interval } from 'rxjs';
@@ -14,7 +14,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss']
 })
-export class ProductComponent implements OnInit, AfterViewChecked{
+export class ProductComponent implements AfterViewChecked{
  
   stock : string = "";
   device : string = "";
@@ -22,8 +22,11 @@ export class ProductComponent implements OnInit, AfterViewChecked{
   numberBody : string = "";
 
   interval: NodeJS.Timeout
+  intervalAdvertise: NodeJS.Timeout
   mode: number = 0;
   checkConfig: number = 0;
+  slideIndex : number = 0;
+  startAdvertise : boolean = false;
   errorMessage: boolean = false;
 
   barcode: string ="";
@@ -50,16 +53,14 @@ export class ProductComponent implements OnInit, AfterViewChecked{
     private employeeService : EmployeeService ) {
     }
 
-  public async ngOnInit() {
-  }
-
   public async wait(){
     if ((this.barcodeLength == this.barcode.length)&&(this.barcodeLength != 0)){
         this.mode++;  
         this.checkConfig++;
         clearInterval(this.interval); 
         let number = this.barcode;
-
+        console.log(this.checkConfig);
+    
         if (this.barcode == environment.removeConfig)   {
           this.checkConfig -= 2;
         }
@@ -77,22 +78,43 @@ export class ProductComponent implements OnInit, AfterViewChecked{
           this.checkConfig = 0;
           this.barcode = environment.viewConfig;
         }
-
+    
         this.barcode = "";    
     }
-
     this.barcodeLength = this.barcode.length;
+    this.ngAfterViewChecked();
   }
+  
+  public async showSlides(){
 
+    let slides: any = document.getElementsByClassName("slide");
+    for (let i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+      if(this.slideIndex == i ){
+        slides[i].style.display = "block";
+      }
+    }
+    this.slideIndex++;
+    if (this.slideIndex == slides.length) {
+      this.slideIndex = 0;
+    }    
+    this.intervalAdvertise = setTimeout(() => this.showSlides(), 8000);    
+  }
+  
   public async ngAfterViewChecked(){
-
+    if(this.startAdvertise == false){
+      this.startAdvertise = true;
+      this.showSlides();
+    }
+    
     if (this.barcode == environment.inConfig){
+      clearInterval(this.intervalAdvertise); 
       this.barcode ="";
       this.mode = 1111;
       this.interval = setInterval(() => this.wait(), 1000);    
       
     }
-
+  
     if (this.checkConfig == 1){
       this.checkConfig = 2;
       this.interval = setInterval(() => this.wait(), 1000);        
@@ -109,6 +131,7 @@ export class ProductComponent implements OnInit, AfterViewChecked{
     }
 
     if ((this.barcode == environment.viewConfig)||(this.mode == 1115)){
+      clearInterval(this.intervalAdvertise); 
       this.barcode ="";
       this.mode = 1115;
       this.stock = localStorage.getItem('stock');
@@ -119,7 +142,7 @@ export class ProductComponent implements OnInit, AfterViewChecked{
     }
 
     if (this.barcode.length == 13){
- 
+      clearInterval(this.intervalAdvertise);
       try{
         this.mode = 1;
         let stock = localStorage.getItem('stock');
@@ -143,12 +166,13 @@ export class ProductComponent implements OnInit, AfterViewChecked{
     }
 
     if (this.barcode.startsWith('ent')){
+      clearInterval(this.intervalAdvertise);
       this.mode = 2;
       let stock = localStorage.getItem('stock');
       let device = localStorage.getItem('device');
       this.employeeRegisterResponseModel = await this.employeeService.registerEmployee(this.barcode, stock, device );
       console.log(this.employeeRegisterResponseModel.State);
-    //  this.employeeInfoResponseModel = await this.employeeService.getEmployee(this.barcode);
+    // this.employeeInfoResponseModel = await this.employeeService.getEmployee(this.barcode);
       this.barcode ='';
       this.Timer(8);
     }
@@ -169,6 +193,7 @@ export class ProductComponent implements OnInit, AfterViewChecked{
         this.mode = 0;
       }
     }); 
+    this.startAdvertise = false;
   }
 
 }

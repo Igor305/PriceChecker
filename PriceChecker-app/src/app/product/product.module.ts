@@ -15,7 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatInputModule,
     MatGridListModule,
     MatProgressBarModule,
-    MatButtonModule
+    MatButtonModule,
   ],
   exports: [ProductComponent]
 })
