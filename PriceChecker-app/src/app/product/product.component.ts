@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component } from '@angular/core';
+import { AfterViewChecked, OnInit, Component } from '@angular/core';
 import { ProductService } from '../services/product.service';
 import { ProductResponseModel } from '../models/product/product.respose.model';
 import { interval } from 'rxjs';
@@ -14,7 +14,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss']
 })
-export class ProductComponent implements AfterViewChecked{
+export class ProductComponent implements AfterViewChecked, OnInit{
  
   stock : string = "";
   device : string = "";
@@ -38,7 +38,6 @@ export class ProductComponent implements AfterViewChecked{
 
   productPictureProduct : HTMLImageElement
   productIconProduct : HTMLImageElement
-  productAmountProduct : number
   productResponseModel : ProductResponseModel = {}
   productsResponseModel : Array<number> = []
 
@@ -53,55 +52,23 @@ export class ProductComponent implements AfterViewChecked{
     private employeeService : EmployeeService ) {
     }
 
-  public async wait(){
-    if ((this.barcodeLength == this.barcode.length)&&(this.barcodeLength != 0)){
-        this.mode++;  
-        this.checkConfig++;
-        clearInterval(this.interval); 
-        let number = this.barcode;
-        console.log(this.checkConfig);
-    
-        if (this.barcode == environment.removeConfig)   {
-          this.checkConfig -= 2;
-        }
-        if (this.checkConfig == 1)   {
-          localStorage.setItem('stock', number);
-        }
-        if (this.checkConfig == 3)   {
-          localStorage.setItem('device', number);
-        }
-        if (this.checkConfig == 5)   {
-          localStorage.setItem('ip', number);
-        }
-        if (this.checkConfig == 7)   {
-          localStorage.setItem('numberBody', number);
-          this.checkConfig = 0;
-          this.barcode = environment.viewConfig;
-        }
-    
-        this.barcode = "";    
-    }
-    this.barcodeLength = this.barcode.length;
-    this.ngAfterViewChecked();
-  }
-  
-  public async showSlides(){
+  public async ngOnInit(){
 
-    let slides: any = document.getElementsByClassName("slide");
-    for (let i = 0; i < slides.length; i++) {
-      slides[i].style.display = "none";
-      if(this.slideIndex == i ){
-        slides[i].style.display = "block";
-      }
+    this.stock = localStorage.getItem('stock');
+    this.device = localStorage.getItem('device');
+    this.ip = localStorage.getItem('ip');
+    this.numberBody = localStorage.getItem('numberBody');
+
+    if ((this.stock == null)||(this.device == null)||(this.ip == null)||(this.numberBody == null)){
+      this.barcode = environment.inConfig;
     }
-    this.slideIndex++;
-    if (this.slideIndex == slides.length) {
-      this.slideIndex = 0;
-    }    
-    this.intervalAdvertise = setTimeout(() => this.showSlides(), 8000);    
+
   }
-  
+
   public async ngAfterViewChecked(){
+
+    //------------------------------------------------Config------------------------------------
+    
     if(this.startAdvertise == false){
       this.startAdvertise = true;
       this.showSlides();
@@ -125,7 +92,7 @@ export class ProductComponent implements AfterViewChecked{
       this.interval = setInterval(() => this.wait(), 1000);        
     } 
 
-    if (this.checkConfig == 5){
+    if (this.checkConfig == 5){772211004
       this.checkConfig = 6;
       this.interval = setInterval(() => this.wait(), 1000);        
     }
@@ -140,30 +107,43 @@ export class ProductComponent implements AfterViewChecked{
       this.numberBody = localStorage.getItem('numberBody');
       this.Timer(8);
     }
+    
+    if (this.barcode == environment.removeConfig){
+      localStorage.clear();
+      
+      this.barcode = "";
+      this.stock = "";
+      this.device = "";
+      this.ip = "";
+      this.numberBody = "";
+      this.barcode = environment.inConfig;
+    }
+
+    //------------------------------------------------Product------------------------------------
 
     if (this.barcode.length == 13){
       clearInterval(this.intervalAdvertise);
       try{
         this.mode = 1;
+        this.errorMessage = false; 
         let stock = localStorage.getItem('stock');
         let device = localStorage.getItem('device');
         this.productResponseModel = await this.productService.getProduct(this.barcode, stock, device);
         this.barcodeAsset = this.barcode;
         this.barcode ='';
-      //   this.productIconProduct = await this.productService.getIcon(this.productResponseModel.Id);
-       // this.productsResponseModel = await this.productService.getProducts(this.productResponseModel.Id);
+      // this.productsResponseModel = await this.productService.getProducts(this.productResponseModel.Id);
         this.productPictureProduct = await this.productService.getPicture(this.productResponseModel.Id, stock, device);
-        this.productAmountProduct = await this.productService.getAmount(this.productResponseModel.Id, stock, device);
         this.Timer(8);
         
       }
 
       catch{  
         this.errorMessage = true; 
-        console.log(this.errorMessage = true);
         this.Timer(8);
       }
     }
+
+    //------------------------------------------------Employee------------------------------------
 
     if (this.barcode.startsWith('ent')){
       clearInterval(this.intervalAdvertise);
@@ -179,6 +159,53 @@ export class ProductComponent implements AfterViewChecked{
 
   }
 
+  public async showSlides(){
+
+    let slides: any = document.getElementsByClassName("slide");
+    for (let i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+      if(this.slideIndex == i ){
+        slides[i].style.display = "block";
+      }
+    }
+    this.slideIndex++;
+    if (this.slideIndex == slides.length) {
+      this.slideIndex = 0;
+    }    
+    this.intervalAdvertise = setTimeout(() => this.showSlides(), 8000);    
+  }
+
+  public async wait(){
+    if ((this.barcodeLength == this.barcode.length)&&(this.barcodeLength != 0)){
+      this.mode++;  
+      this.checkConfig++;
+      clearInterval(this.interval); 
+      let number = this.barcode;
+  
+      if (this.barcode == environment.removeConfig)   {
+        this.checkConfig -= 2;
+      }
+      if (this.checkConfig == 1)   {
+        localStorage.setItem('stock', number);
+      }
+      if (this.checkConfig == 3)   {
+        localStorage.setItem('device', number);
+      }
+      if (this.checkConfig == 5)   {
+        localStorage.setItem('ip', number);
+      }
+      if (this.checkConfig == 7)   {
+        localStorage.setItem('numberBody', number);
+        this.checkConfig = 0;
+        this.barcode = environment.viewConfig;
+      }
+  
+      this.barcode = "";    
+    }
+    this.barcodeLength = this.barcode.length;
+    this.ngAfterViewChecked();
+  }
+
   Timer(seconds: number) {
     var time = seconds;
     const timer$ = interval(1000);
@@ -187,10 +214,15 @@ export class ProductComponent implements AfterViewChecked{
       this.curSec =  sec;
 
       if (this.curSec === seconds) {
-        sub.unsubscribe();
+        sub.unsubscribe();      
       }
       if (this.progressbarValue == 0){
         this.mode = 0;
+        this.errorMessage = false; 
+      }
+      if (this.barcode != ""){
+        sub.unsubscribe();   
+        this.ngAfterViewChecked();
       }
     }); 
     this.startAdvertise = false;

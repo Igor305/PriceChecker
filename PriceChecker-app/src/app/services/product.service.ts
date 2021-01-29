@@ -21,17 +21,6 @@ constructor(private http: HttpClient, private router: Router) { }
 
     return product;
   }
-  
-  public async getAmount ( code, stock, device ): Promise<number> { 
-    const url : string = environment.protocol + environment.host + environment.port +
-    environment.totals + environment.key + environment.code + code;
-    
-    const list = await this.http.get<Array<ProductAmountResponseModel>>(url).toPromise();
-    const amountInStock = await list.find (x =>x.StockId == stock); 
-    const amount = amountInStock.Qty;
-
-    return amount;
-  }
 
   public async getPicture( code, stock, device ): Promise<HTMLImageElement> { 
     const url : string = environment.protocol + environment.host + environment.port +
@@ -59,6 +48,17 @@ constructor(private http: HttpClient, private router: Router) { }
     icon.src = imageUrl;
 
     return icon;
+  }
+
+  public async getAmount ( code, stock, device ): Promise<number> { 
+    const url : string = environment.protocol + environment.host + environment.port +
+    environment.totals + environment.key + environment.code + code;
+    
+    const list = await this.http.get<Array<ProductAmountResponseModel>>(url).toPromise();
+    const amountInStock = await list.find (x =>x.StockId == stock); 
+    const amount = amountInStock.Qty;
+
+    return amount;
   }
 
   public async getProducts ( code ) : Promise<Array<number>>{

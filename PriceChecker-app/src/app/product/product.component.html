@@ -2,6 +2,7 @@
 <!--Режим ожидания -->
 <span *ngIf="mode == 0;" >
    <span class = "slider">
+      <span *ngIf="device == '234';" ><img class="slide" src="/assets/img/42.Episode.png"></span>
       <img class="slide" src="/assets/img/Банер_ПЧ_мал_Реклама_поставщика_Кава_4_01_10_01.png">
       <img class="slide" src="/assets/img/39.Episode.png">
       <img class="slide" src="/assets/img/40.Episode.png">
@@ -15,69 +16,76 @@
 <span *ngIf="mode == 1111;" >
    <span class ="name" >
       <mat-grid-list>
-         Вітаю у режимі конфігурації <br>
-         Просканируйте номер магазина 
+         <br><br><br><br><br><br><br>
+         <span class ="config">Вітаю у режимі конфігурації</span> <br><br><br>
+         <span class ="config">Проскануйте номер магазина</span>
       </mat-grid-list>   
    </span>
 </span>
 <span *ngIf="mode == 1112;" >
    <span class ="name" >
       <mat-grid-list>
-         Вітаю у режимі конфігурації <br>
-         Просканируйте номер ПЧ
+         <br><br><br><br><br><br><br>
+         <span class ="config">Вітаю у режимі конфігурації</span> <br><br><br>
+         <span class ="config">Проскануйте номер ПЧ</span>
       </mat-grid-list>   
    </span>
 </span>
 <span *ngIf="mode == 1113;" >
    <span class ="name" >
       <mat-grid-list>
-         Вітаю у режимі конфігурації <br>
-         Просканируйте IP
+         <br><br><br><br><br><br><br>
+         <span class ="config">Вітаю у режимі конфігурації</span> <br><br><br>
+         <span class ="config">Проскануйте IP</span>
       </mat-grid-list>   
    </span>
 </span>
 <span *ngIf="mode == 1114;" >
    <span class ="name" >
       <mat-grid-list>
-         Вітаю у режимі конфігурації <br>
-         Просканируйте номер корпусу (тільки цифри, без букви «Р»)
+         <br><br><br><br><br><br><br>
+         <span class ="config">Вітаю у режимі конфігурації</span> <br><br><br>
+         <span class ="config">Проскануйте номер корпусу (тільки цифри, без букви «Р»)</span>
       </mat-grid-list>   
    </span>
 </span>
 <span *ngIf="mode == 1115;" >
-   <span class ="name" >
-      <mat-grid-list>
-         Номер магазину: {{this.stock}} <br>
-         Номер ПЧ: {{this.device}} <br>
-         Статичний IP: {{this.ip}} <br>
-         Номер корпусу: {{this.numberBody}} <br>
-         <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
-      </mat-grid-list>   
-   </span>
+   <mat-grid-list >
+         <br><br><br><br><br><br><br>
+         <span class ="config">Номер магазину: {{this.stock}}  </span> <br><br><br>
+         <span class ="config">Номер ПЧ: {{this.device}}  </span> <br><br><br>
+         <span class ="config">Статичний IP: {{this.ip}} </span> <br><br><br>
+         <span class ="config">Номер корпусу: {{this.numberBody}}  </span> 
+         <mat-progress-bar class = "mat-progress-bar" *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
+   </mat-grid-list>   
 </span>
 
 <!--Режим сканирования товара -->
 <span *ngIf="mode == 1;" >
-   <span *ngIf="errorMessage == false;" >
-      <mat-grid-list>
-            <img class='image' id="image"/>                  
-            <span class = "price">{{productResponseModel.Price}} грн </span> <br>
-            {{productResponseModel.PriceOld}} <br>
+   <mat-grid-list>
+      <span *ngIf="errorMessage == false;" >
+         <img class='image' id="image"/>                  
+         <span class = "price">{{productResponseModel.Price}} грн </span> <br>
+         {{productResponseModel.PriceOld}} <br>
+         <span class ="hr_top">
             <hr>
-            <span class = "name">{{productResponseModel.Name}} </span> <br>
+            <br><br><br>
+            <span class ="name">   {{productResponseModel.Name}} </span> 
+         </span>
+         <br>
+         <span class ="hr_bottom">
             <hr>
-            <span class ="additional">
-               Ш/К: -  {{productResponseModel.Barcode}} 
-               Кількість - {{productAmountProduct}} 
-               Код - {{productResponseModel.Id}} 
-            </span>
-            <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
-      </mat-grid-list>
-   </span>
-   <span *ngIf="errorMessage == true;" >
-      <img src="/assets/img/resources/productError_dark.jpg">  
-      <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
-   </span>
+            <span class ="additional">Ш/К: -  {{productResponseModel.Barcode}}</span>
+            <span class ="additional">Кількість - {{productResponseModel.Qty}}</span>
+            <span class ="additional">Код - {{productResponseModel.Id}}</span>
+         </span>
+         <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
+      </span>
+      <span *ngIf="errorMessage == true;" >
+         <img src="/assets/img/resources/productError_dark.jpg">  
+         <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
+      </span>
+   </mat-grid-list>
 </span>
 
 <!--Режим регистрации персонала -->
@@ -94,7 +102,7 @@
    </span>
    <span *ngIf="errorMessage == true;" >
       Вы кто? <br>
-      Уходите)ent321002
+      Уходите)
       <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
    </span>
 </span>

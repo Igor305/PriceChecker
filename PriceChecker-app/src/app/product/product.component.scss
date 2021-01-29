@@ -3,11 +3,15 @@ mat-grid-list{
   height: 600px;
   background-image: url(../../assets/img/resources/systemInfo_dark.jpg);
 }
+mat-progress-bar{
+  position:absolute; 
+  top: 596px; 
+}
 .slide{
   display: none;
 }
 .image{
-  width: 500px;
+  width: 510px;
   height: 550px;
   float: right;
   margin: 20px 10px 0px 0px;
@@ -20,17 +24,36 @@ mat-grid-list{
   height: 1px;
   margin: -1px;
 }
+.config{
+  margin-left: 35%;
+  color : #f3f3f0;
+  font-size : 25px;
+  font-family: "Times New Roman', Times, serif";
+}
 .name{
   color : #f3f3f0;
   font-size : 25px;
   font-family: "Times New Roman', Times, serif";
 }
 .price{
+  position: absolute;
+  top: 200px;
+  left: 180px;
   color : #FFDD00;
   font-size : 55px;
   font-family: "Times New Roman', Times, serif";
 }
+
+.hr_top{
+  position: absolute;
+  bottom: 120px;
+}
+.hr_bottom{
+  position: absolute;
+  bottom: 35px;
+}
 .additional{
+  margin-left: 45px;
   color : #e4e3de;
   font-size : 16px;
   font-family: "Times New Roman', Times, serif";
