@@ -3,6 +3,8 @@ export interface ProductResponseModel{
     Id? : number;
     Name? : string;
     Price? : number;
+    Penny? : number;
     PriceOld? : number;
+    PennyOld? : number;
     Qty? : number;
 }

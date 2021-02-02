@@ -7,6 +7,8 @@ import { EmployeeService } from '../services/employee.service';
 import { AssetResponseModel } from '../models/asset/asset.response.model';
 import { CardResponseModel } from '../models/card/card.response.model';
 import { environment } from 'src/environments/environment';
+import { isFakeMousedownFromScreenReader } from '@angular/cdk/a11y';
+import { keyframes } from '@angular/animations';
 
 
 @Component({
@@ -78,23 +80,23 @@ export class ProductComponent implements AfterViewChecked, OnInit{
       clearInterval(this.intervalAdvertise); 
       this.barcode ="";
       this.mode = 1111;
-      this.interval = setInterval(() => this.wait(), 1000);    
+      this.interval = setInterval(() => this.waitConfig(), 1000);    
       
     }
   
     if (this.checkConfig == 1){
       this.checkConfig = 2;
-      this.interval = setInterval(() => this.wait(), 1000);        
+      this.interval = setInterval(() => this.waitConfig(), 1000);        
     }
 
     if (this.checkConfig == 3){
       this.checkConfig = 4;
-      this.interval = setInterval(() => this.wait(), 1000);        
+      this.interval = setInterval(() => this.waitConfig(), 1000);        
     } 
 
     if (this.checkConfig == 5){772211004
       this.checkConfig = 6;
-      this.interval = setInterval(() => this.wait(), 1000);        
+      this.interval = setInterval(() => this.waitConfig(), 1000);        
     }
 
     if ((this.barcode == environment.viewConfig)||(this.mode == 1115)){
@@ -121,6 +123,7 @@ export class ProductComponent implements AfterViewChecked, OnInit{
 
     //------------------------------------------------Product------------------------------------
 
+    
     if (this.barcode.length == 13){
       clearInterval(this.intervalAdvertise);
       try{
@@ -131,7 +134,7 @@ export class ProductComponent implements AfterViewChecked, OnInit{
         this.productResponseModel = await this.productService.getProduct(this.barcode, stock, device);
         this.barcodeAsset = this.barcode;
         this.barcode ='';
-      // this.productsResponseModel = await this.productService.getProducts(this.productResponseModel.Id);
+     //   this.productsResponseModel = await this.productService.getProducts(this.productResponseModel.Id);
         this.productPictureProduct = await this.productService.getPicture(this.productResponseModel.Id, stock, device);
         this.Timer(8);
         
@@ -140,6 +143,7 @@ export class ProductComponent implements AfterViewChecked, OnInit{
       catch{  
         this.errorMessage = true; 
         this.Timer(8);
+        this.barcode ='';
       }
     }
 
@@ -152,7 +156,6 @@ export class ProductComponent implements AfterViewChecked, OnInit{
       let device = localStorage.getItem('device');
       this.employeeRegisterResponseModel = await this.employeeService.registerEmployee(this.barcode, stock, device );
       console.log(this.employeeRegisterResponseModel.State);
-    // this.employeeInfoResponseModel = await this.employeeService.getEmployee(this.barcode);
       this.barcode ='';
       this.Timer(8);
     }
@@ -175,7 +178,7 @@ export class ProductComponent implements AfterViewChecked, OnInit{
     this.intervalAdvertise = setTimeout(() => this.showSlides(), 8000);    
   }
 
-  public async wait(){
+  public async waitConfig(){
     if ((this.barcodeLength == this.barcode.length)&&(this.barcodeLength != 0)){
       this.mode++;  
       this.checkConfig++;
@@ -220,7 +223,8 @@ export class ProductComponent implements AfterViewChecked, OnInit{
         this.mode = 0;
         this.errorMessage = false; 
       }
-      if (this.barcode != ""){
+      console.log(this.progressbarValue);
+      if (this.barcode.length == 13){
         sub.unsubscribe();   
         this.ngAfterViewChecked();
       }

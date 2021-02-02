@@ -19,6 +19,27 @@ constructor(private http: HttpClient, private router: Router) { }
     environment.device + device + environment.barcode + barcode;      
     const product = await this.http.get<ProductResponseModel>(url).toPromise();
 
+    let productNameIndexOf = product.Name.indexOf('арт.');
+    product.Name = product.Name.slice(0,productNameIndexOf);
+    
+    if (product.PriceOld != null){
+      if(Number.isInteger(product.PriceOld)){
+        product.PennyOld = 0;
+      }
+      else{
+        product.PennyOld = product.PriceOld % 1 * 100;
+        product.PriceOld = Math.trunc(product.PriceOld);
+      }
+    }
+
+    if(Number.isInteger(product.Price)){
+      product.Penny = 0;
+    }
+    else{
+      product.Penny = product.Price % 1 * 100;
+      product.Price = Math.trunc(product.Price);
+    }
+
     return product;
   }
 

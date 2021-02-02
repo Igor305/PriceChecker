@@ -5,16 +5,26 @@ mat-grid-list{
 }
 mat-progress-bar{
   position:absolute; 
-  top: 596px; 
+  top: 590px; 
+}
+hr{
+  width: 500px;
+  size:10;
+  }
+.slider{
+  width: 1024px;
+  height: 600px;
 }
 .slide{
   display: none;
 }
 .image{
+  position: absolute;
   width: 510px;
-  height: 550px;
+  height: 520px;
   float: right;
-  margin: 20px 10px 0px 0px;
+  right: 10px;
+  top: 45px;
   border-radius: 10px;
 }
 .visually-hidden {
@@ -28,22 +38,71 @@ mat-progress-bar{
   margin-left: 35%;
   color : #f3f3f0;
   font-size : 25px;
-  font-family: "Times New Roman', Times, serif";
+  font-family: sans-serif;
 }
 .name{
+  position: relative;
   color : #f3f3f0;
-  font-size : 25px;
-  font-family: "Times New Roman', Times, serif";
+  font-size : 22px;
+  left: 25px;
+  font-family: sans-serif;
+}
+.priceOld {
+  position: absolute;
+  top: 70px;
+  left: 320px;
+  font-size: 80px;
+  color: #FFFFFF;
+  font-family: sans-serif;
+}
+.pennyOld{
+  position: relative;
+  top: 75px;
+  left: 410px;
+  color: #FFFFFF;
+  font-size : 40px;
+  font-family: sans-serif;
+}
+.currencyOld{
+  position: absolute;
+  top: 105px;
+  left: 410px;
+  color: #FFFFFF;
+  font-size : 40px;
+  font-family: sans-serif;
+}
+.priceOld:before {
+  border-bottom: 3px solid #FFFFFF;
+  position: absolute;
+  content: "";
+  width: 180%;
+  height: 50%;
+  transform: rotate(-15deg);
 }
 .price{
-  position: absolute;
-  top: 200px;
-  left: 180px;
+  position: relative;
+  top: 150px;
+  left: 85px;
   color : #FFDD00;
-  font-size : 55px;
-  font-family: "Times New Roman', Times, serif";
+  font-size : 155px;
+  font-family: sans-serif;
 }
-
+.penny{
+  position: relative;
+  top: 90px;
+  left: 110px;
+  color : #FFDD00;
+  font-size : 65px;
+  font-family: sans-serif;
+}
+.currency{
+  position: relative;
+  top: 150px;
+  left: 40px;
+  color : #FFDD00;
+  font-size : 85px;
+  font-family: sans-serif;
+}
 .hr_top{
   position: absolute;
   bottom: 120px;
@@ -56,12 +115,13 @@ mat-progress-bar{
   margin-left: 45px;
   color : #e4e3de;
   font-size : 16px;
-  font-family: "Times New Roman', Times, serif";
-  font-weight: "100";
+  font-weight:200;
+  font-family: sans-serif;
+
 }
 .errorMessage{
   text-align: center;
   color : #ad2b0a;
   font-size : 25px;
-  font-family: "Times New Roman', Times, serif";
+  font-family: sans-serif;
 }

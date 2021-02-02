@@ -45,7 +45,7 @@
       <mat-grid-list>
          <br><br><br><br><br><br><br>
          <span class ="config">Вітаю у режимі конфігурації</span> <br><br><br>
-         <span class ="config">Проскануйте номер корпусу (тільки цифри, без букви «Р»)</span>
+         <span class ="config">Проскануйте номер корпусу</span>
       </mat-grid-list>   
    </span>
 </span>
@@ -64,21 +64,35 @@
 <span *ngIf="mode == 1;" >
    <mat-grid-list>
       <span *ngIf="errorMessage == false;" >
-         <img class='image' id="image"/>                  
-         <span class = "price">{{productResponseModel.Price}} грн </span> <br>
-         {{productResponseModel.PriceOld}} <br>
+         <img class='image' id="image"/> 
+         <span *ngIf = "productResponseModel.PennyOld != null">
+            <span class = "qwer">
+               <span class = "priceOld">{{productResponseModel.PriceOld}}</span> 
+               <span class = "pennyOld" *ngIf="productResponseModel.PennyOld == 0">0</span> 
+               <span class = "pennyOld">{{productResponseModel.PennyOld}}</span> 
+               <span class = "currencyOld">грн</span><br>
+            </span>
+         </span>
+         <span class = "price">{{productResponseModel.Price}}</span> 
+         <span class = "penny" *ngIf="productResponseModel.Penny == 0">0</span> 
+         <span class = "penny">{{productResponseModel.Penny}}</span> 
+         <span class = "currency">грн</span><br>
+         
          <span class ="hr_top">
             <hr>
-            <br><br><br>
-            <span class ="name">   {{productResponseModel.Name}} </span> 
+            <br>
+            <span class ="name">{{productResponseModel.Name}} </span> 
+            <br><br>
+
          </span>
          <br>
          <span class ="hr_bottom">
             <hr>
-            <span class ="additional">Ш/К: -  {{productResponseModel.Barcode}}</span>
-            <span class ="additional">Кількість - {{productResponseModel.Qty}}</span>
-            <span class ="additional">Код - {{productResponseModel.Id}}</span>
+            <span class ="additional">Ш/К: {{productResponseModel.Barcode}}</span>
+            <span class ="additional">Кількість: {{productResponseModel.Qty}}</span>
+            <span class ="additional">Код: {{productResponseModel.Id}}</span>
          </span>
+         
          <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
       </span>
       <span *ngIf="errorMessage == true;" >
