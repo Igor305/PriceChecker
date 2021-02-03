@@ -19,12 +19,12 @@ hr{
   display: none;
 }
 .image{
-  position: absolute;
+  position: relative;
   width: 510px;
   height: 520px;
   float: right;
-  right: 10px;
-  top: 45px;
+  margin-right: 10px;
+  margin-top: 45px;
   border-radius: 10px;
 }
 .visually-hidden {
@@ -41,32 +41,23 @@ hr{
   font-family: sans-serif;
 }
 .name{
-  position: relative;
+  position: absolute;
   color : #f3f3f0;
-  font-size : 22px;
-  left: 25px;
+  float: left;
+  font-size : 25px;
+  margin-left: 20px;
   font-family: sans-serif;
 }
 .priceOld {
-  position: absolute;
-  top: 70px;
-  left: 320px;
-  font-size: 80px;
+ 
+  left: 400px;
+  font-size: 95px;
   color: #FFFFFF;
   font-family: sans-serif;
 }
 .pennyOld{
-  position: relative;
-  top: 75px;
-  left: 410px;
-  color: #FFFFFF;
-  font-size : 40px;
-  font-family: sans-serif;
-}
-.currencyOld{
-  position: absolute;
-  top: 105px;
-  left: 410px;
+
+  position:absolute;
   color: #FFFFFF;
   font-size : 40px;
   font-family: sans-serif;
@@ -75,33 +66,45 @@ hr{
   border-bottom: 3px solid #FFFFFF;
   position: absolute;
   content: "";
-  width: 180%;
-  height: 50%;
+  width: 19%;
+  height: 8%;
   transform: rotate(-15deg);
 }
 .price{
-  position: relative;
-  top: 150px;
-  left: 85px;
   color : #FFDD00;
-  font-size : 155px;
+  font-size : 160px;
   font-family: sans-serif;
 }
-.penny{
+.pennyStock{
   position: relative;
-  top: 90px;
-  left: 110px;
+  top: 200px;
+  margin-left: 5px;
+  text-align: center;
+  position:absolute;
   color : #FFDD00;
   font-size : 65px;
   font-family: sans-serif;
 }
-.currency{
+.penny{
   position: relative;
   top: 150px;
-  left: 40px;
+  margin-left: 5px;
+  text-align: center;
+  position:absolute;
   color : #FFDD00;
-  font-size : 85px;
+  font-size : 65px;
   font-family: sans-serif;
+}
+.posRightStock{
+  float: right;
+  text-align: right;
+  margin-top: 40px;
+  margin-right: 15%;
+}
+.posRight{
+  float: right;
+  margin-top: 140px;
+  margin-right: 15%;
 }
 .hr_top{
   position: absolute;
