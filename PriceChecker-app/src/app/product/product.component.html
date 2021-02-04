@@ -65,43 +65,34 @@
    <mat-grid-list>
       <span *ngIf="errorMessage == false;" >
          <img class='image' id="image"/> 
-         <span *ngIf = "productResponseModel.PennyOld != null">        
             <span class = "posRightStock">
-               <span class = "priceOld">{{productResponseModel.PriceOld}}
-                  <span class = "pennyOld" *ngIf="productResponseModel.PennyOld == 0">{{productResponseModel.PennyOld}}0<br>грн</span> 
-                  <span class = "pennyOld" *ngIf="productResponseModel.PennyOld != 0">{{productResponseModel.PennyOld}}<br>грн</span> 
-               </span>  
-               <br><br><br>
-               <span class = "price">{{productResponseModel.Price}} 
-                  <span class = "pennyStock" *ngIf="productResponseModel.Penny == 0">{{productResponseModel.Penny}}0<br>грн</span> 
-                  <span class = "pennyStock" *ngIf="productResponseModel.Penny != 0">{{productResponseModel.Penny}}<br>грн</span> 
-               </span>  
-            </span>
-         </span>
-         <span *ngIf = "productResponseModel.PennyOld == null">  
-            <span class = "posRight">
+               <span *ngIf="productResponseModel.PriceOld != null">
+                  <span class = "priceOld">{{productResponseModel.PriceOld}}</span>  
+                     <span class = "pennyOld" *ngIf="productResponseModel.PennyOld == 0">{{productResponseModel.PennyOld}}0</span>
+                     <span class = "currencyOld">грн</span>
+                     <span class = "pennyOld" *ngIf="productResponseModel.PennyOld != 0">{{productResponseModel.PennyOld}}<br></span> 
+                     <span class = "currencyOld">грн</span>
+                  </span>  
+               <br>
                <span class = "price">{{productResponseModel.Price}}</span> 
-               <span class = "penny" *ngIf="productResponseModel.Penny == 0">{{productResponseModel.Penny}}0<br>грн</span> 
-               <span class = "penny" *ngIf="productResponseModel.Penny != 0">{{productResponseModel.Penny}}<br>грн</span> 
-            </span>
-         </span>
-    
+               <span class = "penny" *ngIf="productResponseModel.Penny == 0">{{productResponseModel.Penny}}0<br></span> 
+               <span class = "currency">грн</span>
+               <span class = "penny" *ngIf="productResponseModel.Penny != 0">{{productResponseModel.Penny}}<br></span> 
+               <span class = "currency">грн</span>
+               </span>  
          <span class ="hr_top">
             <hr>
-            <br>
             <span class ="name">{{productResponseModel.Name}} </span> 
-            <br><br>
-
          </span>
          <br>
          <span class ="hr_bottom">
             <hr>
-            <span class ="additional">Ш/К: {{productResponseModel.Barcode}}</span>
-            <span class ="additional">Кількість: {{productResponseModel.Qty}}</span>
-            <span class ="additional">Код: {{productResponseModel.Id}}</span>
+            <span class ="additional">Ш/К:  <span class ="additionalValue">{{productResponseModel.Barcode}}</span></span>
+            <span class ="additionalRange">Кількість:  <span class ="additionalValue">{{productResponseModel.Qty}}</span></span>
+            <span class ="additionalRange">Код:  <span class ="additionalValue">{{productResponseModel.Id}}</span></span>
          </span>
          
-         <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
+         <mat-progress-bar mode="determinate" [value]='progressbarValue'></mat-progress-bar>
       </span>
       <span *ngIf="errorMessage == true;" >
          <img src="/assets/img/resources/productError_dark.jpg">  

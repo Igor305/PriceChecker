@@ -7,8 +7,6 @@ import { EmployeeService } from '../services/employee.service';
 import { AssetResponseModel } from '../models/asset/asset.response.model';
 import { CardResponseModel } from '../models/card/card.response.model';
 import { environment } from 'src/environments/environment';
-import { isFakeMousedownFromScreenReader } from '@angular/cdk/a11y';
-import { keyframes } from '@angular/animations';
 
 
 @Component({
@@ -213,13 +211,13 @@ export class ProductComponent implements AfterViewChecked, OnInit{
     var time = seconds;
     const timer$ = interval(1000);
     const sub = timer$.subscribe((sec) => {
-      this.progressbarValue = 100 - sec * 100 / seconds;
+      this.progressbarValue = 0 + sec * 100 / seconds;
       this.curSec =  sec;
 
       if (this.curSec === seconds) {
         sub.unsubscribe();      
       }
-      if (this.progressbarValue == 0){
+      if (this.progressbarValue == 100){
         this.mode = 0;
         this.errorMessage = false; 
       }
@@ -229,6 +227,7 @@ export class ProductComponent implements AfterViewChecked, OnInit{
         this.ngAfterViewChecked();
       }
     }); 
+    this.progressbarValue = 0;
     this.startAdvertise = false;
   }
 
