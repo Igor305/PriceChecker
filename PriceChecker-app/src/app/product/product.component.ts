@@ -1,4 +1,4 @@
-import { AfterViewChecked, OnInit, Component } from '@angular/core';
+import { OnInit, Component } from '@angular/core';
 import { ProductService } from '../services/product.service';
 import { ProductResponseModel } from '../models/product/product.respose.model';
 import { interval } from 'rxjs';
@@ -14,15 +14,17 @@ import { environment } from 'src/environments/environment';
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss']
 })
-export class ProductComponent implements AfterViewChecked, OnInit{
+export class ProductComponent implements  OnInit{
  
   stock : string = "";
   device : string = "";
   ip : string = "";
   numberBody : string = "";
 
-  interval: NodeJS.Timeout
+  intervalConfig: NodeJS.Timeout
   intervalAdvertise: NodeJS.Timeout
+  intervalWait: NodeJS.Timeout
+  stopTimer: boolean = false 
   mode: number = 0;
   checkConfig: number = 0;
   slideIndex : number = 0;
@@ -63,49 +65,58 @@ export class ProductComponent implements AfterViewChecked, OnInit{
       this.barcode = environment.inConfig;
     }
 
+    this.intervalWait = setInterval(() => this.wait(), 100); 
+
   }
 
-  public async ngAfterViewChecked(){
+  public async wait(){
 
-    //------------------------------------------------Config------------------------------------
+    //console.log(this.barcode);
     
+    //------------------------------------------------showSlides------------------------------------
+
     if(this.startAdvertise == false){
       this.startAdvertise = true;
       this.showSlides();
     }
+
+    //------------------------------------------------Config------------------------------------
     
     if (this.barcode == environment.inConfig){
       clearInterval(this.intervalAdvertise); 
       this.barcode ="";
       this.mode = 1111;
-      this.interval = setInterval(() => this.waitConfig(), 1000);    
+      this.intervalConfig = setInterval(() => this.waitConfig(), 1000);    
       
     }
   
     if (this.checkConfig == 1){
       this.checkConfig = 2;
-      this.interval = setInterval(() => this.waitConfig(), 1000);        
+      this.intervalConfig = setInterval(() => this.waitConfig(), 1000);        
     }
 
     if (this.checkConfig == 3){
       this.checkConfig = 4;
-      this.interval = setInterval(() => this.waitConfig(), 1000);        
+      this.intervalConfig = setInterval(() => this.waitConfig(), 1000);        
     } 
 
-    if (this.checkConfig == 5){772211004
+    if (this.checkConfig == 5){
       this.checkConfig = 6;
-      this.interval = setInterval(() => this.waitConfig(), 1000);        
+      this.intervalConfig = setInterval(() => this.waitConfig(), 1000);        
     }
 
-    if ((this.barcode == environment.viewConfig)||(this.mode == 1115)){
+    if ((this.barcode == environment.viewConfig)){
       clearInterval(this.intervalAdvertise); 
+      if (this.barcode == environment.viewConfig){
+        this.mode = 1115;
+      }
+      console.log(this.mode);
+      this.Timer(80);
       this.barcode ="";
-      this.mode = 1115;
       this.stock = localStorage.getItem('stock');
       this.device = localStorage.getItem('device');
       this.ip = localStorage.getItem('ip');
       this.numberBody = localStorage.getItem('numberBody');
-      this.Timer(8);
     }
     
     if (this.barcode == environment.removeConfig){
@@ -123,8 +134,9 @@ export class ProductComponent implements AfterViewChecked, OnInit{
 
     
     if (this.barcode.length == 13){
-      clearInterval(this.intervalAdvertise);
       try{
+        clearInterval(this.intervalAdvertise);
+        this.Timer(80);
         this.mode = 1;
         this.errorMessage = false; 
         let stock = localStorage.getItem('stock');
@@ -134,13 +146,12 @@ export class ProductComponent implements AfterViewChecked, OnInit{
         this.barcode ='';
      //   this.productsResponseModel = await this.productService.getProducts(this.productResponseModel.Id);
         this.productPictureProduct = await this.productService.getPicture(this.productResponseModel.Id, stock, device);
-        this.Timer(8);
-        
+ 
       }
 
       catch{  
         this.errorMessage = true; 
-        this.Timer(8);
+        this.Timer(80);
         this.barcode ='';
       }
     }
@@ -149,13 +160,14 @@ export class ProductComponent implements AfterViewChecked, OnInit{
 
     if (this.barcode.startsWith('ent')){
       clearInterval(this.intervalAdvertise);
+      this.Timer(80);
       this.mode = 2;
       let stock = localStorage.getItem('stock');
       let device = localStorage.getItem('device');
       this.employeeRegisterResponseModel = await this.employeeService.registerEmployee(this.barcode, stock, device );
       console.log(this.employeeRegisterResponseModel.State);
       this.barcode ='';
-      this.Timer(8);
+
     }
 
   }
@@ -178,57 +190,65 @@ export class ProductComponent implements AfterViewChecked, OnInit{
 
   public async waitConfig(){
     if ((this.barcodeLength == this.barcode.length)&&(this.barcodeLength != 0)){
-      this.mode++;  
+      this.mode++; 
       this.checkConfig++;
-      clearInterval(this.interval); 
+      clearInterval(this.intervalConfig); 
       let number = this.barcode;
   
       if (this.barcode == environment.removeConfig)   {
         this.checkConfig -= 2;
+        this.barcode = "";  
       }
       if (this.checkConfig == 1)   {
         localStorage.setItem('stock', number);
+        this.barcode = "";  
       }
       if (this.checkConfig == 3)   {
         localStorage.setItem('device', number);
+        this.barcode = "";  
       }
       if (this.checkConfig == 5)   {
-        localStorage.setItem('ip', number);
+        localStorage.setItem('ip', number);        
+        this.barcode = "";  
       }
       if (this.checkConfig == 7)   {
         localStorage.setItem('numberBody', number);
         this.checkConfig = 0;
         this.barcode = environment.viewConfig;
       }
-  
-      this.barcode = "";    
+
     }
     this.barcodeLength = this.barcode.length;
-    this.ngAfterViewChecked();
   }
 
   Timer(seconds: number) {
-    var time = seconds;
-    const timer$ = interval(1000);
+    if (this.progressbarValue != 0){
+      this.progressbarValue == 0
+      this.stopTimer = true;
+    }
+    this.progressbarValue = 0;
+    const timer$ = interval(100);
     const sub = timer$.subscribe((sec) => {
       this.progressbarValue = 0 + sec * 100 / seconds;
       this.curSec =  sec;
+      console.log(this.stopTimer); 
+      
+      if(this.stopTimer){
+        sub.unsubscribe();
+        this.stopTimer = false;
+      } 
 
-      if (this.curSec === seconds) {
-        sub.unsubscribe();      
-      }
       if (this.progressbarValue == 100){
+        sub.unsubscribe(); 
+        this.progressbarValue = 0;
         this.mode = 0;
         this.errorMessage = false; 
+        this.startAdvertise = false;
       }
       console.log(this.progressbarValue);
       if (this.barcode.length == 13){
         sub.unsubscribe();   
-        this.ngAfterViewChecked();
       }
     }); 
-    this.progressbarValue = 0;
-    this.startAdvertise = false;
   }
-
 }

@@ -15,8 +15,8 @@
 <!--Режим конфигурации -->
 <span *ngIf="mode == 1111;" >
    <span class ="name" >
-      <mat-grid-list>
-         <br><br><br><br><br><br><br>
+      <mat-grid-list cols = "1">
+         <br><br><br>
          <span class ="config">Вітаю у режимі конфігурації</span> <br><br><br>
          <span class ="config">Проскануйте номер магазина</span>
       </mat-grid-list>   
@@ -24,8 +24,8 @@
 </span>
 <span *ngIf="mode == 1112;" >
    <span class ="name" >
-      <mat-grid-list>
-         <br><br><br><br><br><br><br>
+      <mat-grid-list cols = "1">
+         <br><br><br>
          <span class ="config">Вітаю у режимі конфігурації</span> <br><br><br>
          <span class ="config">Проскануйте номер ПЧ</span>
       </mat-grid-list>   
@@ -33,8 +33,8 @@
 </span>
 <span *ngIf="mode == 1113;" >
    <span class ="name" >
-      <mat-grid-list>
-         <br><br><br><br><br><br><br>
+      <mat-grid-list cols = "1">
+         <br><br><br>
          <span class ="config">Вітаю у режимі конфігурації</span> <br><br><br>
          <span class ="config">Проскануйте IP</span>
       </mat-grid-list>   
@@ -42,15 +42,15 @@
 </span>
 <span *ngIf="mode == 1114;" >
    <span class ="name" >
-      <mat-grid-list>
-         <br><br><br><br><br><br><br>
+      <mat-grid-list cols = "1">
+         <br><br><br>
          <span class ="config">Вітаю у режимі конфігурації</span> <br><br><br>
          <span class ="config">Проскануйте номер корпусу</span>
       </mat-grid-list>   
    </span>
 </span>
 <span *ngIf="mode == 1115;" >
-   <mat-grid-list >
+   <mat-grid-list cols = "1">
          <br><br><br><br><br><br><br>
          <span class ="config">Номер магазину: {{this.stock}}  </span> <br><br><br>
          <span class ="config">Номер ПЧ: {{this.device}}  </span> <br><br><br>
@@ -62,7 +62,7 @@
 
 <!--Режим сканирования товара -->
 <span *ngIf="mode == 1;" >
-   <mat-grid-list>
+   <mat-grid-list cols ="1">
       <span *ngIf="errorMessage == false;" >
          <img class='image' id="image"/> 
             <span class = "posRightStock">
