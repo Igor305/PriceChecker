@@ -81,12 +81,12 @@
                <span class = "currency">грн</span>
                </span>  
          <span class ="hr_top">
-            <hr>
+            <hr width="450">
             <span class ="name">{{productResponseModel.Name}} </span> 
          </span>
          <br>
          <span class ="hr_bottom">
-            <hr>
+            <hr width="450">
             <span class ="additional">Ш/К:  <span class ="additionalValue">{{productResponseModel.Barcode}}</span></span>
             <span class ="additionalRange">Кількість:  <span class ="additionalValue">{{productResponseModel.Qty}}</span></span>
             <span class ="additionalRange">Код:  <span class ="additionalValue">{{productResponseModel.Id}}</span></span>
@@ -103,25 +103,38 @@
 
 <!--Режим регистрации персонала -->
 <span *ngIf="mode == 2;" >
-   <span *ngIf="errorMessage == false;" >
-      <span >{{employeeRegisterResponseModel.Name}} </span> <br>
-      <span *ngIf="employeeRegisterResponseModel.State == 0;"> Выполнила выход из системы
-      <span *ngIf="employeeRegisterResponseModel.State == 1;"> Выполнила вход в систему
-      <span >
-         Ш/К: - {{employeeRegisterResponseModel.Barcode}} 
-         Код - {{employeeRegisterResponseModel.Id}}
+   <mat-grid-list cols ="1">
+      <span class = "mode2Fixation">ФІКСАЦІЯ
+         <span class = "mode2WorkTime">РОБОЧОГО ЧАСУ</span>       
       </span>
+      <br><br><br><br><br><br>
+      <hr width="900px">
+      <span class = "mode2Name">{{employeeRegisterResponseModel.Name}} </span>
+      <span class = "mode2Status" *ngIf="employeeRegisterResponseModel.State == 0;"> початок </span>
+      <span class = "mode2Status" *ngIf="employeeRegisterResponseModel.State == 1;"> кінець </span>
+      <span class = "mode2Time">робочого дня зафіксовано о {{timeNow}} </span>
       <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
-   </span>
-   <span *ngIf="errorMessage == true;" >
-      Вы кто? <br>
-      Уходите)
+    </mat-grid-list>
+    
+</span>
+
+<!--Режим бонусной карты -->
+<span *ngIf="mode == 3;" >
+   <mat-grid-list cols ="1">
+      <span class = "mode3Check">ПЕРЕВІРКА
+         <span class = "mode3BonusText">БОНУСІВ</span>
+      </span> 
+      <br><br><br><br><br><br>
+      <hr width="900px">
+      <span class = "mode3Name">{{cardResponseModel.Name}}, на Вашому рахунку</span>
+
+      <span class = "mode3Bonus">{{cardResponseModel.Bonus}} </span> 
       <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
-   </span>
+   </mat-grid-list>
 </span>
 
 <!--Режим сканирования оборудования -->
-<span *ngIf="mode == 3;" >
+<span *ngIf="mode == 4;" >
    <span *ngIf="errorMessage == false;" >
       <mat-grid-list cols="2" rowHeight="1:1">
          <mat-grid-tile>
@@ -147,4 +160,3 @@
       <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
    </span>
 </span>
-<label>{{barcode}}</label> <br>

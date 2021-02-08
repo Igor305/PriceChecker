@@ -24,7 +24,6 @@ hr{
   border: none;
   background-color: #7e7e7e;
   color: #7e7e7e;
-  width: 450px;
   height: 2px;
   margin-bottom: 1px;
 }
@@ -151,3 +150,87 @@ hr{
 .additionalValue{
   color:honeydew;
 }
+
+.mode2Fixation{
+  font-weight: 10;
+  position: absolute;
+  color:honeydew;
+  margin-top: 40px;
+  margin-left: 170px;
+  font-size: 55px;
+}
+
+.mode2WorkTime{
+  color:hsl(51, 98%, 48%);
+}
+
+.mode2Name{
+  position: absolute;
+  text-align: center;
+  margin-top: 30px;
+  margin-left: 10px;
+  color:hsl(51, 98%, 48%);
+  font-size: 87px;
+}
+
+.mode2Status{
+  position: absolute;
+  margin-top: 220px;
+  margin-left: 435px;
+  color:#44a019;
+  font-size: 50px;
+}
+
+.mode2Time{
+  position: absolute;
+  text-align: center;
+  margin-top: 280px;
+  margin-left: 250px;
+  color: honeydew;
+  font-size: 30px;
+}
+
+.mode3Check{
+  font-weight: 10;
+  position: absolute;
+  color:honeydew;
+  margin-top: 40px;
+  margin-left: 250px;
+  font-size: 55px;
+}
+
+.mode3BonusText{
+  color:hsl(51, 98%, 48%);
+  font-weight: 500;
+}
+
+.mode3Name{
+  position: absolute;
+  text-align: center;
+  margin-top: 70px;
+  margin-left: 130px;
+  padding-top: 10px;
+  border-radius: 50px 50px;;
+  color:hsl(0, 0%, 0%);
+  width: 800px;
+  height: 50px;
+  font-size: 30px;
+  background: hsl(51, 98%, 48%);
+  font-weight: 500;
+}
+
+.mode3Bonus{
+  position: absolute;
+  text-align: center;
+  margin-top: 130px;
+  margin-left: 150px;
+  color: honeydew;
+  width: 800px;
+  height: 300px;
+  font-family: Bookman Old Style, serif;
+  font-size: 220px;
+}
+
+
+
+

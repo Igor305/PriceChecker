@@ -1,4 +1,4 @@
-import { OnInit, Component } from '@angular/core';
+import { OnInit, Component, ModuleWithComponentFactories } from '@angular/core';
 import { ProductService } from '../services/product.service';
 import { ProductResponseModel } from '../models/product/product.respose.model';
 import { interval } from 'rxjs';
@@ -7,6 +7,7 @@ import { EmployeeService } from '../services/employee.service';
 import { AssetResponseModel } from '../models/asset/asset.response.model';
 import { CardResponseModel } from '../models/card/card.response.model';
 import { environment } from 'src/environments/environment';
+import { CardService } from '../services/card.service';
 
 
 @Component({
@@ -34,6 +35,7 @@ export class ProductComponent implements  OnInit{
   barcode: string ="";
   barcodeLength : number = 0;
   barcodeAsset: string ="";
+  timeNow: string ="";
 
   progressbarValue = 0;
   curSec: number = 0;
@@ -50,8 +52,10 @@ export class ProductComponent implements  OnInit{
   assetPictureResponseModel : HTMLImageElement
   cardResponseModel : CardResponseModel = {}
 
-  constructor(private productService : ProductService,
-    private employeeService : EmployeeService ) {
+  constructor(
+    private productService : ProductService,
+    private employeeService : EmployeeService,
+    private cardService : CardService) {
     }
 
   public async ngOnInit(){
@@ -110,7 +114,6 @@ export class ProductComponent implements  OnInit{
       if (this.barcode == environment.viewConfig){
         this.mode = 1115;
       }
-      console.log(this.mode);
       this.Timer(80);
       this.barcode ="";
       this.stock = localStorage.getItem('stock');
@@ -143,15 +146,20 @@ export class ProductComponent implements  OnInit{
         let device = localStorage.getItem('device');
         this.productResponseModel = await this.productService.getProduct(this.barcode, stock, device);
         this.barcodeAsset = this.barcode;
-        this.barcode ='';
      //   this.productsResponseModel = await this.productService.getProducts(this.productResponseModel.Id);
         this.productPictureProduct = await this.productService.getPicture(this.productResponseModel.Id, stock, device);
  
       }
 
+      //------------------------------------------------Card------------------------------------
+
       catch{  
-        this.errorMessage = true; 
+        //this.errorMessage = true; 
         this.Timer(80);
+        let stock = localStorage.getItem('stock');
+        let device = localStorage.getItem('device');
+        this.cardResponseModel = await this.cardService.getBonusCard(this.barcode, stock, device);
+        this.mode = 3;
         this.barcode ='';
       }
     }
@@ -165,7 +173,7 @@ export class ProductComponent implements  OnInit{
       let stock = localStorage.getItem('stock');
       let device = localStorage.getItem('device');
       this.employeeRegisterResponseModel = await this.employeeService.registerEmployee(this.barcode, stock, device );
-      console.log(this.employeeRegisterResponseModel.State);
+      this.TimeNow();
       this.barcode ='';
 
     }
@@ -221,7 +229,7 @@ export class ProductComponent implements  OnInit{
     this.barcodeLength = this.barcode.length;
   }
 
-  Timer(seconds: number) {
+  public async Timer(seconds: number) {
     if (this.progressbarValue != 0){
       this.progressbarValue == 0
       this.stopTimer = true;
@@ -231,7 +239,6 @@ export class ProductComponent implements  OnInit{
     const sub = timer$.subscribe((sec) => {
       this.progressbarValue = 0 + sec * 100 / seconds;
       this.curSec =  sec;
-      console.log(this.stopTimer); 
       
       if(this.stopTimer){
         sub.unsubscribe();
@@ -245,10 +252,16 @@ export class ProductComponent implements  OnInit{
         this.errorMessage = false; 
         this.startAdvertise = false;
       }
-      console.log(this.progressbarValue);
       if (this.barcode.length == 13){
         sub.unsubscribe();   
       }
     }); 
+  }
+
+  public async TimeNow(){
+
+    var now = new Date();
+
+    this.timeNow = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
   }
 }
