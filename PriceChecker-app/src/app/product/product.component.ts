@@ -1,13 +1,16 @@
-import { OnInit, Component, ModuleWithComponentFactories } from '@angular/core';
+import { OnInit, Component } from '@angular/core';
+
 import { ProductService } from '../services/product.service';
-import { ProductResponseModel } from '../models/product/product.respose.model';
-import { interval } from 'rxjs';
-import { EmployeeResponseModel } from '../models/employee/employee.response.model';
+import { CardService } from '../services/card.service';
 import { EmployeeService } from '../services/employee.service';
+
+import { ProductResponseModel } from '../models/product/product.respose.model';
+import { EmployeeResponseModel } from '../models/employee/employee.response.model';
 import { AssetResponseModel } from '../models/asset/asset.response.model';
 import { CardResponseModel } from '../models/card/card.response.model';
+
+import { interval } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { CardService } from '../services/card.service';
 
 
 @Component({
@@ -69,13 +72,11 @@ export class ProductComponent implements  OnInit{
       this.barcode = environment.inConfig;
     }
 
-    this.intervalWait = setInterval(() => this.wait(), 100); 
+    this.intervalWait = setInterval(() => this.wait(), 300); 
 
   }
 
   public async wait(){
-
-    //console.log(this.barcode);
     
     //------------------------------------------------showSlides------------------------------------
 
@@ -114,7 +115,7 @@ export class ProductComponent implements  OnInit{
       if (this.barcode == environment.viewConfig){
         this.mode = 1115;
       }
-      this.Timer(80);
+      this.Timer(8);
       this.barcode ="";
       this.stock = localStorage.getItem('stock');
       this.device = localStorage.getItem('device');
@@ -139,27 +140,30 @@ export class ProductComponent implements  OnInit{
     if (this.barcode.length == 13){
       try{
         clearInterval(this.intervalAdvertise);
-        this.Timer(80);
         this.mode = 1;
         this.errorMessage = false; 
         let stock = localStorage.getItem('stock');
         let device = localStorage.getItem('device');
         this.productResponseModel = await this.productService.getProduct(this.barcode, stock, device);
-        this.barcodeAsset = this.barcode;
-     //   this.productsResponseModel = await this.productService.getProducts(this.productResponseModel.Id);
         this.productPictureProduct = await this.productService.getPicture(this.productResponseModel.Id, stock, device);
- 
-      }
+        this.Timer(8);
+        this.barcodeAsset = this.barcode;
+        this.barcode = '';
+     //   this.productsResponseModel = await this.productService.getProducts(this.productResponseModel.Id);  
+    }
 
       //------------------------------------------------Card------------------------------------
 
       catch{  
-        //this.errorMessage = true; 
-        this.Timer(80);
+        this.mode = 3;
         let stock = localStorage.getItem('stock');
         let device = localStorage.getItem('device');
         this.cardResponseModel = await this.cardService.getBonusCard(this.barcode, stock, device);
-        this.mode = 3;
+        this.Timer(8);
+        if (this.cardResponseModel.Id == ""){
+          this.errorMessage = true; 
+          this.mode = 1;
+        }
         this.barcode ='';
       }
     }
@@ -168,11 +172,11 @@ export class ProductComponent implements  OnInit{
 
     if (this.barcode.startsWith('ent')){
       clearInterval(this.intervalAdvertise);
-      this.Timer(80);
       this.mode = 2;
       let stock = localStorage.getItem('stock');
       let device = localStorage.getItem('device');
       this.employeeRegisterResponseModel = await this.employeeService.registerEmployee(this.barcode, stock, device );
+      this.Timer(8);
       this.TimeNow();
       this.barcode ='';
 
@@ -230,21 +234,13 @@ export class ProductComponent implements  OnInit{
   }
 
   public async Timer(seconds: number) {
-    if (this.progressbarValue != 0){
-      this.progressbarValue == 0
-      this.stopTimer = true;
-    }
-    this.progressbarValue = 0;
-    const timer$ = interval(100);
+    
+    console.log(this.progressbarValue);
+    const timer$ = interval(150);
     const sub = timer$.subscribe((sec) => {
-      this.progressbarValue = 0 + sec * 100 / seconds;
+      this.progressbarValue = 0 + sec * 10 / seconds;
       this.curSec =  sec;
       
-      if(this.stopTimer){
-        sub.unsubscribe();
-        this.stopTimer = false;
-      } 
-
       if (this.progressbarValue == 100){
         sub.unsubscribe(); 
         this.progressbarValue = 0;
@@ -252,7 +248,8 @@ export class ProductComponent implements  OnInit{
         this.errorMessage = false; 
         this.startAdvertise = false;
       }
-      if (this.barcode.length == 13){
+
+      if ((this.barcode.length == 13)||(this.barcode.startsWith('ent'))){
         sub.unsubscribe();   
       }
     }); 

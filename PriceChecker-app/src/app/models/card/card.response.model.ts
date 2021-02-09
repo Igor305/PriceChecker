@@ -1,5 +1,5 @@
 export interface CardResponseModel{
     Bonus?: number;
-    Id?: number;
+    Id?: string;
     Name?: string;
 }
