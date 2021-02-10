@@ -9,7 +9,7 @@ import { EmployeeResponseModel } from '../models/employee/employee.response.mode
 import { AssetResponseModel } from '../models/asset/asset.response.model';
 import { CardResponseModel } from '../models/card/card.response.model';
 
-import { interval } from 'rxjs';
+import { interval, timer } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 
@@ -32,12 +32,15 @@ export class ProductComponent implements  OnInit{
   mode: number = 0;
   checkConfig: number = 0;
   slideIndex : number = 0;
-  startAdvertise : boolean = false;
   errorMessage: boolean = false;
+  codeOrBarcode: boolean = false;
+
+  startAdvertise : boolean = false;
+  checkProduct: boolean = false;
 
   barcode: string ="";
   barcodeLength : number = 0;
-  barcodeAsset: string ="";
+  barcodeTemporary: string ="";
   timeNow: string ="";
 
   progressbarValue = 0;
@@ -72,17 +75,33 @@ export class ProductComponent implements  OnInit{
       this.barcode = environment.inConfig;
     }
 
-    this.intervalWait = setInterval(() => this.wait(), 300); 
+    this.intervalWait = setInterval(() => this.wait(), 50); 
 
   }
 
   public async wait(){
-    
+
     //------------------------------------------------showSlides------------------------------------
+
 
     if(this.startAdvertise == false){
       this.startAdvertise = true;
       this.showSlides();
+    }
+
+    //------------------------------------------------ManualInput-------------------------------------
+
+    if(this.barcode != ''){
+      this.mode = 9999;
+      clearInterval(this.intervalAdvertise); 
+      this.barcodeTemporary = 'startAdvertise';
+    }
+
+    if((this.barcode == '')&&(this.barcodeTemporary == 'startAdvertise')){
+      this.mode = 0;
+      this.barcodeTemporary = '';
+      this.startAdvertise = false;
+
     }
 
     //------------------------------------------------Config------------------------------------
@@ -137,19 +156,30 @@ export class ProductComponent implements  OnInit{
     //------------------------------------------------Product------------------------------------
 
     
-    if (this.barcode.length == 13){
+    if ((this.barcode.length == 13)&&(this.mode != 9999)||(this.checkProduct)){
       try{
+
+        this.barcodeTemporary = this.barcode;
+        this.barcode = "";
+
+        this.checkProduct = false;
         clearInterval(this.intervalAdvertise);
         this.mode = 1;
         this.errorMessage = false; 
+
         let stock = localStorage.getItem('stock');
         let device = localStorage.getItem('device');
-        this.productResponseModel = await this.productService.getProduct(this.barcode, stock, device);
+
+        if (this.codeOrBarcode){
+          this.productResponseModel = await this.productService.getProductFromCode(this.barcodeTemporary, stock, device);   
+        }
+
+        if(!this.codeOrBarcode){
+          this.productResponseModel = await this.productService.getProductFromBarcode(this.barcodeTemporary, stock, device);
+        }
         this.productPictureProduct = await this.productService.getPicture(this.productResponseModel.Id, stock, device);
         this.Timer(8);
-        this.barcodeAsset = this.barcode;
-        this.barcode = '';
-     //   this.productsResponseModel = await this.productService.getProducts(this.productResponseModel.Id);  
+       
     }
 
       //------------------------------------------------Card------------------------------------
@@ -158,7 +188,7 @@ export class ProductComponent implements  OnInit{
         this.mode = 3;
         let stock = localStorage.getItem('stock');
         let device = localStorage.getItem('device');
-        this.cardResponseModel = await this.cardService.getBonusCard(this.barcode, stock, device);
+        this.cardResponseModel = await this.cardService.getBonusCard(this.barcodeTemporary, stock, device);
         this.Timer(8);
         if (this.cardResponseModel.Id == ""){
           this.errorMessage = true; 
@@ -179,7 +209,6 @@ export class ProductComponent implements  OnInit{
       this.Timer(8);
       this.TimeNow();
       this.barcode ='';
-
     }
 
   }
@@ -235,7 +264,6 @@ export class ProductComponent implements  OnInit{
 
   public async Timer(seconds: number) {
     
-    console.log(this.progressbarValue);
     const timer$ = interval(150);
     const sub = timer$.subscribe((sec) => {
       this.progressbarValue = 0 + sec * 10 / seconds;
@@ -249,7 +277,7 @@ export class ProductComponent implements  OnInit{
         this.startAdvertise = false;
       }
 
-      if ((this.barcode.length == 13)||(this.barcode.startsWith('ent'))){
+      if ((this.barcode.length == 13)||(this.barcode.startsWith('ent'))||(this.barcode == environment.viewConfig)||(this.barcode.length !=0)){
         sub.unsubscribe();   
       }
     }); 
@@ -260,5 +288,21 @@ export class ProductComponent implements  OnInit{
     var now = new Date();
 
     this.timeNow = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+  }
+
+  public async ManualRemoveLast(){
+
+    this.barcode  = this.barcode.substring(0,this.barcode.length-2);
+  }
+
+  public async ManualFind(){
+    
+    if (this.barcode.length > 10){
+      this.codeOrBarcode = false;
+    }
+    if (this.barcode.length <= 10){
+      this.codeOrBarcode = true;
+    }
+    this.checkProduct = true;
   }
 }

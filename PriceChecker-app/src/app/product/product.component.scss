@@ -55,6 +55,18 @@ hr{
   color : #f3f3f0;
   font-size : 25px;
 }
+.manualInputBc{
+  width: 1024px;
+  height: 600px;
+  background-size: 100%;
+  background-image: url('/assets/img/resources/manualInputBc_dark.png');
+}
+.manualInputValue{
+  position:absolute;
+  margin-top: 250px;
+  margin-left: 50px;
+  font-size: 55px;
+}
 .name{
   position: absolute;
   float: left;

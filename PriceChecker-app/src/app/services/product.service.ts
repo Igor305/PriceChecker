@@ -13,11 +13,29 @@ export class ProductService {
 
 constructor(private http: HttpClient, private router: Router) { }
 
-  public async getProduct( barcode, stock, device ): Promise<ProductResponseModel> {
+  public async getProductFromBarcode( barcode, stock, device ): Promise<ProductResponseModel> {
     const url: string = environment.protocol + environment.host + environment.port +
     environment.art + environment.key + environment.stock + stock + 
     environment.device + device + environment.barcode + barcode;      
     const product = await this.http.get<ProductResponseModel>(url).toPromise();
+
+    this.productValidation(product);
+
+    return product;
+  }
+
+  public async getProductFromCode( code, stock, device ): Promise<ProductResponseModel> {
+    const url: string = environment.protocol + environment.host + environment.port +
+    environment.art + environment.key + environment.stock + stock + 
+    environment.device + device + environment.code + code;      
+    const product = await this.http.get<ProductResponseModel>(url).toPromise();
+
+    this.productValidation(product);
+
+    return product;
+  }
+
+  private productValidation(product){
 
     let productNameIndexOf = product.Name.indexOf('арт.');
     product.Name = product.Name.slice(0,productNameIndexOf);
@@ -39,8 +57,6 @@ constructor(private http: HttpClient, private router: Router) { }
       product.Penny = product.Price % 1 * 100;
       product.Price = Math.trunc(product.Price);
     }
-
-    return product;
   }
 
   public async getPicture( code, stock, device ): Promise<HTMLImageElement> { 

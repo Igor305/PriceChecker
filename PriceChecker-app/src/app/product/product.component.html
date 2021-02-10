@@ -12,6 +12,14 @@
       <img class="slide" src="/assets/img/57.Episode.png">  
    </span>
 </span>
+<!--Режим ручного ввода-->
+<div *ngIf="(barcode != '')" class = "manualInputBc">
+   <div class = "manualInputValue">
+      <div *ngIf="barcode.includes('*')">{{ManualRemoveLast()}}</div>
+      <div *ngIf="barcode.includes('#')">{{ManualFind()}}</div>
+      {{barcode}}
+   </div>
+</div>
 <!--Режим конфигурации -->
 <span *ngIf="mode == 1111;" >
    <span class ="name" >
@@ -127,7 +135,6 @@
       <br><br><br><br><br><br>
       <hr width="900px">
       <span class = "mode3Name">{{cardResponseModel.Name}}, на Вашому рахунку</span>
-
       <span class = "mode3Bonus">{{cardResponseModel.Bonus}} </span> 
       <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
    </mat-grid-list>
@@ -149,7 +156,6 @@
             Type - {{assetResponseModel.Type}} <br>
          </mat-grid-tile>
       </mat-grid-list>
-
       <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
    </span>
    <span *ngIf="errorMessage == true;" >
