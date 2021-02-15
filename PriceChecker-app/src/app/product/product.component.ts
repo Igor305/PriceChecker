@@ -34,6 +34,7 @@ export class ProductComponent implements  OnInit{
   slideIndex : number = 0;
   errorMessage: boolean = false;
   codeOrBarcode: boolean = false;
+  isEmployee: boolean = false;
 
   startAdvertise : boolean = false;
   checkProduct: boolean = false;
@@ -75,7 +76,7 @@ export class ProductComponent implements  OnInit{
       this.barcode = environment.inConfig;
     }
 
-    this.intervalWait = setInterval(() => this.wait(), 50); 
+    this.intervalWait = setInterval(() => this.wait(), 200); 
 
   }
 
@@ -83,25 +84,9 @@ export class ProductComponent implements  OnInit{
 
     //------------------------------------------------showSlides------------------------------------
 
-
     if(this.startAdvertise == false){
       this.startAdvertise = true;
       this.showSlides();
-    }
-
-    //------------------------------------------------ManualInput-------------------------------------
-
-    if(this.barcode != ''){
-      this.mode = 9999;
-      clearInterval(this.intervalAdvertise); 
-      this.barcodeTemporary = 'startAdvertise';
-    }
-
-    if((this.barcode == '')&&(this.barcodeTemporary == 'startAdvertise')){
-      this.mode = 0;
-      this.barcodeTemporary = '';
-      this.startAdvertise = false;
-
     }
 
     //------------------------------------------------Config------------------------------------
@@ -109,9 +94,9 @@ export class ProductComponent implements  OnInit{
     if (this.barcode == environment.inConfig){
       clearInterval(this.intervalAdvertise); 
       this.barcode ="";
+      this.barcodeTemporary ="";
       this.mode = 1111;
       this.intervalConfig = setInterval(() => this.waitConfig(), 1000);    
-      
     }
   
     if (this.checkConfig == 1){
@@ -131,11 +116,10 @@ export class ProductComponent implements  OnInit{
 
     if ((this.barcode == environment.viewConfig)){
       clearInterval(this.intervalAdvertise); 
-      if (this.barcode == environment.viewConfig){
-        this.mode = 1115;
-      }
+      this.mode = 1115;
       this.Timer(8);
       this.barcode ="";
+      this.barcodeTemporary ="";
       this.stock = localStorage.getItem('stock');
       this.device = localStorage.getItem('device');
       this.ip = localStorage.getItem('ip');
@@ -172,6 +156,7 @@ export class ProductComponent implements  OnInit{
 
         if (this.codeOrBarcode){
           this.productResponseModel = await this.productService.getProductFromCode(this.barcodeTemporary, stock, device);   
+
         }
 
         if(!this.codeOrBarcode){
@@ -179,6 +164,7 @@ export class ProductComponent implements  OnInit{
         }
         this.productPictureProduct = await this.productService.getPicture(this.productResponseModel.Id, stock, device);
         this.Timer(8);
+        this.codeOrBarcode = false;
        
     }
 
@@ -200,8 +186,9 @@ export class ProductComponent implements  OnInit{
 
     //------------------------------------------------Employee------------------------------------
 
-    if (this.barcode.startsWith('ent')){
+    if ((this.barcode.startsWith('ent'))&&(this.mode != 9999)||(this.isEmployee)){
       clearInterval(this.intervalAdvertise);
+      this.isEmployee = false;
       this.mode = 2;
       let stock = localStorage.getItem('stock');
       let device = localStorage.getItem('device');
@@ -211,6 +198,24 @@ export class ProductComponent implements  OnInit{
       this.barcode ='';
     }
 
+    //------------------------------------------------ManualInput-------------------------------------
+    if(this.barcode != ''){
+      if (this.barcodeTemporary == this.barcode){
+        this.mode = 9999;
+        clearInterval(this.intervalAdvertise); 
+      }
+      this.barcodeTemporary = this.barcode;
+    }
+
+    if ((this.barcode == '')&&(this.barcodeTemporary.length == 1)){
+      this.barcodeTemporary = 'startAdvertise';
+    }
+
+    if((this.barcode == '')&&(this.barcodeTemporary == 'startAdvertise')){
+      this.mode = 0;
+      this.barcodeTemporary = '';
+      this.startAdvertise = false;
+    }
   }
 
   public async showSlides(){
@@ -263,10 +268,10 @@ export class ProductComponent implements  OnInit{
   }
 
   public async Timer(seconds: number) {
-    
-    const timer$ = interval(150);
+  
+    const timer$ = interval(10);
     const sub = timer$.subscribe((sec) => {
-      this.progressbarValue = 0 + sec * 10 / seconds;
+      this.progressbarValue = 0 + sec / seconds;
       this.curSec =  sec;
       
       if (this.progressbarValue == 100){
@@ -278,7 +283,7 @@ export class ProductComponent implements  OnInit{
       }
 
       if ((this.barcode.length == 13)||(this.barcode.startsWith('ent'))||(this.barcode == environment.viewConfig)||(this.barcode.length !=0)){
-        sub.unsubscribe();   
+        sub.unsubscribe();  
       }
     }); 
   }
@@ -290,19 +295,24 @@ export class ProductComponent implements  OnInit{
     this.timeNow = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
   }
 
-  public async ManualRemoveLast(){
+  public ManualRemoveLast(){
 
     this.barcode  = this.barcode.substring(0,this.barcode.length-2);
   }
 
-  public async ManualFind(){
-    
-    if (this.barcode.length > 10){
-      this.codeOrBarcode = false;
+  public ManualFind(){
+
+    if (this.barcode.startsWith('ent')){
+      this.isEmployee = true;
     }
-    if (this.barcode.length <= 10){
-      this.codeOrBarcode = true;
+    else{
+      if (this.barcode.length > 10){
+        this.codeOrBarcode = false;
+      }
+      if (this.barcode.length <= 10){
+        this.codeOrBarcode = true;
+      }
+      this.checkProduct = true;
     }
-    this.checkProduct = true;
   }
 }

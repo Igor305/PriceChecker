@@ -13,11 +13,12 @@
    </span>
 </span>
 <!--Режим ручного ввода-->
-<div *ngIf="(barcode != '')" class = "manualInputBc">
+<div *ngIf="mode == 9999;" class = "manualInputBc">
    <div class = "manualInputValue">
+      {{barcode}}
       <div *ngIf="barcode.includes('*')">{{ManualRemoveLast()}}</div>
       <div *ngIf="barcode.includes('#')">{{ManualFind()}}</div>
-      {{barcode}}
+
    </div>
 </div>
 <!--Режим конфигурации -->
