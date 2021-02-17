@@ -14,12 +14,10 @@
 </span>
 <!--Режим ручного ввода-->
 <div *ngIf="mode == 9999;" class = "manualInputBc">
-   <div class = "manualInputValue">
-      {{barcode}}
-      <div *ngIf="barcode.includes('*')">{{ManualRemoveLast()}}</div>
-      <div *ngIf="barcode.includes('#')">{{ManualFind()}}</div>
-
-   </div>
+      <div class = "manualInputValue" (keypress) ="keypress($event)">
+         {{barcode}}
+      </div>
+      <mat-progress-bar class = "mat-progress-bar" *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
 </div>
 <!--Режим конфигурации -->
 <span *ngIf="mode == 1111;" >
@@ -110,22 +108,14 @@
    </mat-grid-list>
 </span>
 
-<!--Режим регистрации персонала -->
-<span *ngIf="mode == 2;" >
-   <mat-grid-list cols ="1">
-      <span class = "mode2Fixation">ФІКСАЦІЯ
-         <span class = "mode2WorkTime">РОБОЧОГО ЧАСУ</span>       
-      </span>
-      <br><br><br><br><br><br>
-      <hr width="900px">
-      <span class = "mode2Name">{{employeeRegisterResponseModel.Name}} </span>
-      <span class = "mode2Status" *ngIf="employeeRegisterResponseModel.State == 0;"> початок </span>
-      <span class = "mode2Status" *ngIf="employeeRegisterResponseModel.State == 1;"> кінець </span>
-      <span class = "mode2Time">робочого дня зафіксовано о {{timeNow}} </span>
-      <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
-    </mat-grid-list>
-    
-</span>
+<!--Режим сопутствующие товары-->
+<div *ngIf="mode == 2">
+   <mat-grid-list cols = "1">
+      <div class = "mode2Bc"></div>
+   </mat-grid-list>
+
+</div>
+
 
 <!--Режим бонусной карты -->
 <span *ngIf="mode == 3;" >
@@ -141,8 +131,25 @@
    </mat-grid-list>
 </span>
 
-<!--Режим сканирования оборудования -->
+<!--Режим регистрации персонала -->
 <span *ngIf="mode == 4;" >
+   <mat-grid-list cols ="1">
+      <span class = "mode4Fixation">ФІКСАЦІЯ
+         <span class = "mode4WorkTime">РОБОЧОГО ЧАСУ</span>       
+      </span>
+      <br><br><br><br><br><br>
+      <hr width="900px">
+      <span class = "mode4Name">{{employeeRegisterResponseModel.Name}} </span>
+      <span class = "mode4Status" *ngIf="employeeRegisterResponseModel.State == 0;"> початок </span>
+      <span class = "mode4Status" *ngIf="employeeRegisterResponseModel.State == 1;"> кінець </span>
+      <span class = "mode4Time">робочого дня зафіксовано о {{timeNow}} </span>
+      <mat-progress-bar *ngIf= "this.progressbarValue > 0" mode="determinate" [value]='progressbarValue'></mat-progress-bar>
+    </mat-grid-list>
+    
+</span>
+
+<!--Режим сканирования оборудования -->
+<span *ngIf="mode == 5;" >
    <span *ngIf="errorMessage == false;" >
       <mat-grid-list cols="2" rowHeight="1:1">
          <mat-grid-tile>

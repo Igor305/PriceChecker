@@ -163,43 +163,11 @@ hr{
   color:honeydew;
 }
 
-.mode2Fixation{
-  font-weight: 10;
-  position: absolute;
-  color:honeydew;
-  margin-top: 40px;
-  margin-left: 170px;
-  font-size: 55px;
-}
-
-.mode2WorkTime{
-  color:hsl(51, 98%, 48%);
-}
-
-.mode2Name{
-  position: absolute;
-  text-align: center;
-  margin-top: 30px;
-  margin-left: 10px;
-  color:hsl(51, 98%, 48%);
-  font-size: 87px;
-}
-
-.mode2Status{
-  position: absolute;
-  margin-top: 220px;
-  margin-left: 435px;
-  color:#44a019;
-  font-size: 50px;
-}
-
-.mode2Time{
-  position: absolute;
-  text-align: center;
-  margin-top: 280px;
-  margin-left: 250px;
-  color: honeydew;
-  font-size: 30px;
+.mode2Bc{
+  width: 1024px;
+  height: 600px;
+  background-size: 100%;
+  background-image: url('/assets/img/resources/companionProdBcDark.png');
 }
 
 .mode3Check{
@@ -243,6 +211,43 @@ hr{
   font-size: 220px;
 }
 
+.mode4Fixation{
+  font-weight: 10;
+  position: absolute;
+  color:honeydew;
+  margin-top: 40px;
+  margin-left: 170px;
+  font-size: 55px;
+}
 
+.mode4WorkTime{
+  color:hsl(51, 98%, 48%);
+}
+
+.mode4Name{
+  position: absolute;
+  text-align: center;
+  margin-top: 30px;
+  margin-left: 10px;
+  color:hsl(51, 98%, 48%);
+  font-size: 87px;
+}
+
+.mode4Status{
+  position: absolute;
+  margin-top: 220px;
+  margin-left: 435px;
+  color:#44a019;
+  font-size: 50px;
+}
+
+.mode4Time{
+  position: absolute;
+  text-align: center;
+  margin-top: 280px;
+  margin-left: 250px;
+  color: honeydew;
+  font-size: 30px;
+}
 
 

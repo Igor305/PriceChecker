@@ -1,4 +1,4 @@
-import { OnInit, Component } from '@angular/core';
+import { OnInit, Component, HostListener } from '@angular/core';
 
 import { ProductService } from '../services/product.service';
 import { CardService } from '../services/card.service';
@@ -9,9 +9,8 @@ import { EmployeeResponseModel } from '../models/employee/employee.response.mode
 import { AssetResponseModel } from '../models/asset/asset.response.model';
 import { CardResponseModel } from '../models/card/card.response.model';
 
-import { interval, timer } from 'rxjs';
+import { interval } from 'rxjs';
 import { environment } from 'src/environments/environment';
-
 
 @Component({
   selector: 'app-product',
@@ -77,9 +76,33 @@ export class ProductComponent implements  OnInit{
     }
 
     this.intervalWait = setInterval(() => this.wait(), 200); 
-
   }
 
+  @HostListener('document:keypress', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) { 
+
+    if ((event.key == "Enter")&&(this.barcode.length !=0)){
+
+      if (this.barcode.startsWith('ent')){
+        this.isEmployee = true;
+      }
+  
+      else{
+        
+        if (this.barcode.length > 10){
+          this.codeOrBarcode = false;
+        
+        }
+        
+        if (this.barcode.length <= 10){
+          this.codeOrBarcode = true;
+    
+        }
+        this.checkProduct = true;
+      }
+    }
+  } 
+  
   public async wait(){
 
     //------------------------------------------------showSlides------------------------------------
@@ -117,7 +140,7 @@ export class ProductComponent implements  OnInit{
     if ((this.barcode == environment.viewConfig)){
       clearInterval(this.intervalAdvertise); 
       this.mode = 1115;
-      this.Timer(8);
+      this.timer(8);
       this.barcode ="";
       this.barcodeTemporary ="";
       this.stock = localStorage.getItem('stock');
@@ -140,7 +163,7 @@ export class ProductComponent implements  OnInit{
     //------------------------------------------------Product------------------------------------
 
     
-    if ((this.barcode.length == 13)&&(this.mode != 9999)||(this.checkProduct)){
+    if ((this.barcode.length == 13)&&(this.mode != 9999)||(this.checkProduct)&&(this.barcode.length != 0 )){
       try{
 
         this.barcodeTemporary = this.barcode;
@@ -162,20 +185,22 @@ export class ProductComponent implements  OnInit{
         if(!this.codeOrBarcode){
           this.productResponseModel = await this.productService.getProductFromBarcode(this.barcodeTemporary, stock, device);
         }
+
         this.productPictureProduct = await this.productService.getPicture(this.productResponseModel.Id, stock, device);
-        this.Timer(8);
+        this.productsResponseModel = await this.productService.getProducts(this.productResponseModel.Id, stock, device);
+        
+        this.timer(8);
         this.codeOrBarcode = false;
-       
     }
 
-      //------------------------------------------------Card------------------------------------
+    //------------------------------------------------Card------------------------------------
 
       catch{  
         this.mode = 3;
         let stock = localStorage.getItem('stock');
         let device = localStorage.getItem('device');
         this.cardResponseModel = await this.cardService.getBonusCard(this.barcodeTemporary, stock, device);
-        this.Timer(8);
+        this.timer(8);
         if (this.cardResponseModel.Id == ""){
           this.errorMessage = true; 
           this.mode = 1;
@@ -184,39 +209,59 @@ export class ProductComponent implements  OnInit{
       }
     }
 
+    //------------------------------------------------companionProd------------------------------------
+    
+    /*console.log(this.productsResponseModel);
+    console.log(this.progressbarValue);
+
+    if((this.productResponseModel.Id > 0 )&&(this.productsResponseModel != [])){
+
+     
+
+        this.mode = 2;
+
+        for(let i = 0; i < this.productsResponseModel.length; i++ ){
+
+          console.log(i);
+          this.barcode = this.productsResponseModel[i].toString() + '#';
+          this.timer(8);
+
+        
+      }
+    }*/
+
     //------------------------------------------------Employee------------------------------------
 
     if ((this.barcode.startsWith('ent'))&&(this.mode != 9999)||(this.isEmployee)){
       clearInterval(this.intervalAdvertise);
       this.isEmployee = false;
-      this.mode = 2;
+      this.mode = 4;
       let stock = localStorage.getItem('stock');
       let device = localStorage.getItem('device');
       this.employeeRegisterResponseModel = await this.employeeService.registerEmployee(this.barcode, stock, device );
-      this.Timer(8);
-      this.TimeNow();
+      this.timer(8);
+      this.timeEmployee();
       this.barcode ='';
     }
 
     //------------------------------------------------ManualInput-------------------------------------
-    if(this.barcode != ''){
+
+    if((this.barcode != '')&&(this.mode != 1111)&&(this.mode != 1112)&&(this.mode != 1113)&&(this.mode != 1114)){
+      
+      if ((this.mode != 9999)||(this.barcodeTemporary != this.barcode)){
+        this.timer(8);
+      }
+
       if (this.barcodeTemporary == this.barcode){
         this.mode = 9999;
         clearInterval(this.intervalAdvertise); 
       }
-      this.barcodeTemporary = this.barcode;
-    }
 
-    if ((this.barcode == '')&&(this.barcodeTemporary.length == 1)){
-      this.barcodeTemporary = 'startAdvertise';
     }
-
-    if((this.barcode == '')&&(this.barcodeTemporary == 'startAdvertise')){
-      this.mode = 0;
-      this.barcodeTemporary = '';
-      this.startAdvertise = false;
-    }
+    this.barcodeTemporary = this.barcode;
   }
+
+  //------------------------------------------------AdditionalFunc-------------------------------------
 
   public async showSlides(){
 
@@ -267,52 +312,38 @@ export class ProductComponent implements  OnInit{
     this.barcodeLength = this.barcode.length;
   }
 
-  public async Timer(seconds: number) {
+  public async timer(seconds: number) {
   
     const timer$ = interval(10);
     const sub = timer$.subscribe((sec) => {
-      this.progressbarValue = 0 + sec / seconds;
-      this.curSec =  sec;
+      this.progressbarValue = 105 - sec  / seconds;
+      this.curSec = sec;
       
-      if (this.progressbarValue == 100){
+      if (this.progressbarValue == 0){
         sub.unsubscribe(); 
-        this.progressbarValue = 0;
+        this.progressbarValue = 100;
         this.mode = 0;
         this.errorMessage = false; 
         this.startAdvertise = false;
+        this.barcode = '';
       }
 
-      if ((this.barcode.length == 13)||(this.barcode.startsWith('ent'))||(this.barcode == environment.viewConfig)||(this.barcode.length !=0)){
+      if ((this.barcode.length == 13)&&(this.mode != 9999)||
+      (this.barcode.startsWith('ent'))||
+      (this.barcode == environment.viewConfig)||
+      (this.barcode.length != this.barcodeTemporary.length )&&(this.mode == 9999)&&
+      (this.barcode.length != 0 )||
+      (this.mode != 9999)&&
+      (this.barcode.length != 0 )){
         sub.unsubscribe();  
       }
     }); 
   }
 
-  public async TimeNow(){
+  public async timeEmployee(){
 
     var now = new Date();
 
     this.timeNow = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
-  }
-
-  public ManualRemoveLast(){
-
-    this.barcode  = this.barcode.substring(0,this.barcode.length-2);
-  }
-
-  public ManualFind(){
-
-    if (this.barcode.startsWith('ent')){
-      this.isEmployee = true;
-    }
-    else{
-      if (this.barcode.length > 10){
-        this.codeOrBarcode = false;
-      }
-      if (this.barcode.length <= 10){
-        this.codeOrBarcode = true;
-      }
-      this.checkProduct = true;
-    }
   }
 }

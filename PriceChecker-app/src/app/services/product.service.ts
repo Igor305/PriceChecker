@@ -87,7 +87,7 @@ constructor(private http: HttpClient, private router: Router) { }
     return icon;
   }
 
-  public async getAmount ( code, stock, device ): Promise<number> { 
+  public async getAmount ( code, stock): Promise<number> { 
     const url : string = environment.protocol + environment.host + environment.port +
     environment.totals + environment.key + environment.code + code;
     
@@ -98,9 +98,10 @@ constructor(private http: HttpClient, private router: Router) { }
     return amount;
   }
 
-  public async getProducts ( code ) : Promise<Array<number>>{
+  public async getProducts ( code, stock, device ) : Promise<Array<number>>{
     const url : string = environment.protocol + environment.host + environment.port +
-    environment.rel + environment.key + environment.code + code;
+    environment.rel + environment.key + environment.stock + stock + 
+    environment.device + device + environment.code + code;
     
     const products = await this.http.get<Array<number>>(url).toPromise();
 
